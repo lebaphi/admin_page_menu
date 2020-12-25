@@ -1,0 +1,25 @@
+<mat-sidenav-container>
+  <mat-sidenav #sidenav role="navigation">
+    <app-sidenav-list (closeSidenav)="sidenav.close()"></app-sidenav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <app-header (sidenavToggle)="sidenav.toggle()"></app-header>
+    <main class="main-viewport">
+      <div class="instruction-group">
+        <div class="title">Restaurant Menu Editor</div>
+        <div class="instruction">Some instructions here</div>
+      </div>
+      <div class="group-action">
+        <button mat-stroked-button (click)="addItem()">
+          <mat-icon>add</mat-icon>
+          <span>Add</span>
+        </button>
+        <button mat-stroked-button (click)="export()">
+          <mat-icon>cloud_download</mat-icon>
+          <span>Export</span>
+        </button>
+      </div>
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>
