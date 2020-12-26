@@ -1,0 +1,16 @@
+<div class="table-category" fxLayout="column">
+  <div class="table-category-editor-label">
+    <div class="category-label">Category Editor</div>
+  </div>
+  <div>
+    <app-table-view
+      [dataSource]="dataSource"
+      [displayedColumns]="displayedColumns"
+      (searchTextEvent)="searchText($event)"
+      (dropTableEvent)="dropTable($event)"
+      (tableEvent)="setTable($event)"
+      (paginatorEvent)="setPaginator($event)"
+      (clickedElmEvent)="navigateTo($event)"
+    ></app-table-view>
+  </div>
+</div>
