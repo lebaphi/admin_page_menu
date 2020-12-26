@@ -1,4 +1,4 @@
-import { Component, ElementRef } from '@angular/core'
+import { Component } from '@angular/core'
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop'
 import { MatTable, MatTableDataSource } from '@angular/material/table'
 import { ActivatedRoute, Router } from '@angular/router'
@@ -35,10 +35,11 @@ const ELEMENT_DATA: PeriodicElement[] = [
 @Component({
   selector: 'app-category-items',
   templateUrl: './category-items.component.html',
-  styleUrls: ['./category-items.component.scss']
+  styleUrls: ['../../styles/styles.scss', './category-items.component.scss']
 })
 export class CategoryItemsComponent {
   displayedColumns: string[] = ['item', 'description', 'price', 'action']
+  columnWidth = `${100 / this.displayedColumns.length}%`
   categoryId: string
   table: MatTable<PeriodicElement>
   dataSource = new MatTableDataSource(ELEMENT_DATA)
@@ -46,35 +47,6 @@ export class CategoryItemsComponent {
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router) {
     this.categoryId = this.activatedRoute.snapshot.params.id
-  }
-
-  dropTable(event: CdkDragDrop<PeriodicElement[]>): void {
-    this.dataSource.paginator = null
-    const prevIndex = this.dataSource.data.findIndex(
-      (d: PeriodicElement) => d === event.item.data
-    )
-
-    moveItemInArray(this.dataSource.data, prevIndex, event.currentIndex)
-    this.table.renderRows()
-    this.dataSource.paginator = this.paginator
-  }
-
-  searchText(value: string): void {
-    this.dataSource.paginator = null
-    const data = ELEMENT_DATA.filter(item =>
-      item.category.toLowerCase().includes(value.toLowerCase())
-    )
-    this.dataSource = new MatTableDataSource(data)
-    this.table.renderRows()
-    this.dataSource.paginator = this.paginator
-  }
-
-  setTable(table: MatTable<PeriodicElement>): void {
-    this.table = table
-  }
-
-  setPaginator(paginator: MatPaginator): void {
-    this.paginator = paginator
   }
 
   navigateTo(element: PeriodicElement): void {

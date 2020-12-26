@@ -6,10 +6,7 @@
     <app-table-view
       [dataSource]="dataSource"
       [displayedColumns]="displayedColumns"
-      (searchTextEvent)="searchText($event)"
-      (dropTableEvent)="dropTable($event)"
-      (tableEvent)="setTable($event)"
-      (paginatorEvent)="setPaginator($event)"
+      [columnWidth]="columnWidth"
       (clickedElmEvent)="navigateTo($event)"
     ></app-table-view>
   </div>

@@ -5,20 +5,19 @@ import {
   AfterViewInit,
   ViewChild,
   ElementRef,
-  EventEmitter,
-  OnInit
+  EventEmitter
 } from '@angular/core'
 import { MatTableDataSource, MatTable } from '@angular/material/table'
 import { PeriodicElement } from '../category-items/category-items.component'
 import { fromEvent } from 'rxjs'
 import { debounceTime, map } from 'rxjs/operators'
-import { CdkDragDrop } from '@angular/cdk/drag-drop'
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop'
 import { MatPaginator } from '@angular/material/paginator'
 
 @Component({
   selector: 'app-table-view',
   templateUrl: './table-view.component.html',
-  styleUrls: ['./table-view.component.scss']
+  styleUrls: ['../../styles/styles.scss', './table-view.component.scss']
 })
 export class TableViewComponent implements AfterViewInit {
   @ViewChild('searchItem') searchItem: ElementRef<HTMLInputElement>
@@ -26,20 +25,17 @@ export class TableViewComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator
   @Input() dataSource: MatTableDataSource<PeriodicElement>
   @Input() displayedColumns: string[]
-  @Output() searchTextEvent = new EventEmitter<string>()
-  @Output() dropTableEvent = new EventEmitter<CdkDragDrop<PeriodicElement[]>>()
-  @Output() tableEvent = new EventEmitter<MatTable<PeriodicElement>>()
-  @Output() paginatorEvent = new EventEmitter<MatPaginator>()
+  @Input() columnWidth: string
   @Output() clickedElmEvent = new EventEmitter<ElementRef<HTMLInputElement>>()
 
   routerLink: string
+  cloneDataSource: MatTableDataSource<PeriodicElement>
 
   constructor() {}
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator
-    this.tableEvent.emit(this.table)
-    this.paginatorEvent.emit(this.paginator)
+    this.cloneDataSource = this.dataSource
 
     fromEvent(this.searchItem.nativeElement, 'keyup')
       .pipe(
@@ -47,12 +43,28 @@ export class TableViewComponent implements AfterViewInit {
         map((event: any) => event.target.value)
       )
       .subscribe(value => {
-        this.searchTextEvent.emit(value)
+        this.dataSource.paginator = null
+        const data = this.cloneDataSource.data.filter(
+          item =>
+            Object.values(item).filter(
+              val => val.toLowerCase().indexOf(value.toLowerCase()) !== -1
+            ).length > 0
+        )
+        this.dataSource = new MatTableDataSource(data)
+        this.table.renderRows()
+        this.dataSource.paginator = this.paginator
       })
   }
 
   dropTable(event: CdkDragDrop<PeriodicElement[]>): void {
-    this.dropTableEvent.emit(event)
+    this.dataSource.paginator = null
+    const prevIndex = this.dataSource.data.findIndex(
+      (d: PeriodicElement) => d === event.item.data
+    )
+
+    moveItemInArray(this.dataSource.data, prevIndex, event.currentIndex)
+    this.table.renderRows()
+    this.dataSource.paginator = this.paginator
   }
 
   navigateTo(element: ElementRef<HTMLInputElement>): void {
