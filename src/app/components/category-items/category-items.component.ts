@@ -10,7 +10,6 @@ export interface PeriodicElement {
   item: string
   description: string
   price: string
-  action: string
 }
 
 const ELEMENT_DATA: PeriodicElement[] = [
@@ -19,16 +18,14 @@ const ELEMENT_DATA: PeriodicElement[] = [
     category: 'Appetizers',
     item: 'Agedashi Tofu',
     description: 'Deep fried tofu with green onion fish flakes.',
-    price: '6.95',
-    action: 'Edit extras'
+    price: '6.95'
   },
   {
     id: '2',
     category: 'Appetizers',
     item: 'Salmon Kama',
     description: 'Grilled salmon cheek.',
-    price: '6.95',
-    action: 'Edit extras'
+    price: '6.95'
   }
 ]
 

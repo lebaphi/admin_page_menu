@@ -8,12 +8,11 @@ export interface PeriodicElement {
   id: string
   extra: string
   price: string
-  action: string
 }
 
 const ELEMENT_DATA: PeriodicElement[] = [
-  { id: '2', extra: 'Add Shrimp', price: '4.00', action: 'Edit | Remove' },
-  { id: '1', extra: 'Add Beef', price: '2.00', action: 'Edit | Remove' }
+  { id: '2', extra: 'Add Shrimp', price: '4.00' },
+  { id: '1', extra: 'Add Beef', price: '2.00' }
 ]
 
 @Component({

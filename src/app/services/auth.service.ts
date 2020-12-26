@@ -16,7 +16,7 @@ export class AuthService {
   login(): void {}
 
   logout(): void {
-    this.snackBar.open('Does not implemented yet!', 'Dismiss', {
+    this.snackBar.open('Logout !', 'Dismiss', {
       duration: 2000
     })
   }

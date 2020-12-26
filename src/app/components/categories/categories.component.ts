@@ -7,16 +7,15 @@ import { Router } from '@angular/router'
 export interface PeriodicElement {
   id: string
   category: string
-  action: string
 }
 
 const ELEMENT_DATA: PeriodicElement[] = [
-  { id: '2', category: 'Appetizers', action: 'Edit items' },
-  { id: '1', category: 'Beverages', action: 'Edit items' },
-  { id: '3', category: 'Bento', action: 'Edit items' },
-  { id: '4', category: 'Bento 1', action: 'Edit items' },
-  { id: '5', category: 'Bento 2', action: 'Edit items' },
-  { id: '6', category: 'Bento 3', action: 'Edit items' }
+  { id: '2', category: 'Appetizers' },
+  { id: '1', category: 'Beverages' },
+  { id: '3', category: 'Bento' },
+  { id: '4', category: 'Bento 1' },
+  { id: '5', category: 'Bento 2' },
+  { id: '6', category: 'Bento 3' }
 ]
 
 @Component({

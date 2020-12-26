@@ -13,6 +13,7 @@ import { fromEvent } from 'rxjs'
 import { debounceTime, map } from 'rxjs/operators'
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop'
 import { MatPaginator } from '@angular/material/paginator'
+import { MatSnackBar } from '@angular/material/snack-bar'
 
 @Component({
   selector: 'app-table-view',
@@ -31,7 +32,7 @@ export class TableViewComponent implements AfterViewInit {
   routerLink: string
   cloneDataSource: MatTableDataSource<PeriodicElement>
 
-  constructor() {}
+  constructor(private snackBar: MatSnackBar) {}
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator
@@ -69,6 +70,18 @@ export class TableViewComponent implements AfterViewInit {
 
   navigateTo(element: ElementRef<HTMLInputElement>): void {
     this.clickedElmEvent.emit(element)
+  }
+
+  edit(element: PeriodicElement): void {
+    this.snackBar.open(`Edit ${element.id}`, 'Dismiss', {
+      duration: 2000
+    })
+  }
+
+  remove(element: PeriodicElement): void {
+    this.snackBar.open(`Delete ${element.id}`, 'Dismiss', {
+      duration: 2000
+    })
   }
 
   capital(text: string): string {
