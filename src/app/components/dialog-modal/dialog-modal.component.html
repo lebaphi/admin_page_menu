@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Edit</h1>
+<div mat-dialog-content *ngFor="let key of keys">
+  <mat-form-field *ngIf="key !== 'id'">
+    <input matInput [(ngModel)]="data[key]" placeholder="{{ key }}" />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>
+    Update
+  </button>
+</div>

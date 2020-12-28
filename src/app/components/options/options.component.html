@@ -1,0 +1,19 @@
+<div class="table-category" fxLayout="column">
+  <div class="table-category-editor">
+    <div class="category-name">Agedashi Tofu</div>
+  </div>
+  <div>
+    <app-table-view
+      [dataSource]="dataSource"
+      [displayedColumns]="displayedColumns"
+      [columnWidth]="columnWidth"
+      (clickedElmEvent)="navigateTo($event)"
+    ></app-table-view>
+  </div>
+</div>
+<div>
+  <button mat-stroked-button routerLink="/">
+    <mat-icon class="edit-icon">send</mat-icon>
+    <span class="edit-text">Back to category</span>
+  </button>
+</div>
