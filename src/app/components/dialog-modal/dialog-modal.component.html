@@ -1,7 +1,12 @@
 <h1 mat-dialog-title>{{ data.action === 'add' ? 'Add new item' : 'Edit' }}</h1>
 <div mat-dialog-content *ngFor="let key of keys">
   <mat-form-field *ngIf="key !== 'id' && key !== 'action'">
-    <input matInput [(ngModel)]="data[key]" placeholder="{{ key }}" />
+    <input
+      matInput
+      type="{{ key === 'price' ? 'number' : 'text' }}"
+      [(ngModel)]="data[key]"
+      placeholder="{{ key }}"
+    />
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
