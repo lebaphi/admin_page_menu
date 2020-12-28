@@ -19,16 +19,18 @@ const dataTable: ItemExtras[] = [
   styleUrls: ['../../styles/styles.scss', './edit-extras.component.scss']
 })
 export class EditExtrasComponent {
-  @Input() categoryId: string
-  @Input() itemId: string
   displayedColumns: string[] = ['extra', 'price', 'action']
   columnWidth = `${100 / this.displayedColumns.length}%`
   dataSource = new MatTableDataSource(dataTable)
+
+  categoryId: string
+  itemId: string
+  optionId: string
 
   constructor(private activatedRoute: ActivatedRoute) {
     const { id, itemId, optionId } = this.activatedRoute.snapshot.params
     this.categoryId = id
     this.itemId = itemId
-    console.log(id, itemId, optionId)
+    this.optionId = optionId
   }
 }

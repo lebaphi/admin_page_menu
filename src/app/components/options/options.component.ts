@@ -23,18 +23,19 @@ export class OptionsComponent implements OnInit {
   columnWidth = `${100 / this.displayedColumns.length}%`
   dataSource = new MatTableDataSource(dataTable)
   categoryId: string
-  optionId: string
+  itemId: string
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router) {
-    this.categoryId = this.activatedRoute.snapshot.params.id
-    this.optionId = this.activatedRoute.snapshot.params.optionId
+    const { id, itemId } = this.activatedRoute.snapshot.params
+    this.categoryId = id
+    this.itemId = itemId
   }
 
   ngOnInit(): void {}
 
   navigateTo(element: any): void {
     this.router.navigate([
-      `/category/${this.categoryId}/option/${this.optionId}/item/${element.id}`
+      `/categories/${this.categoryId}/items/${this.itemId}/options/${element.id}/extras`
     ])
   }
 }

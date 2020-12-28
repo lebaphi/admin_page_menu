@@ -8,18 +8,23 @@ import { OptionsComponent } from './components/options/options.component'
 const routes: Routes = [
   {
     path: '',
+    redirectTo: 'categories',
+    pathMatch: 'full'
+  },
+  {
+    path: 'categories',
     component: CategoriesComponent
   },
   {
-    path: 'category/:id',
+    path: 'categories/:id/items',
     component: CategoryItemsComponent
   },
   {
-    path: 'category/:id/option/:optionId',
+    path: 'categories/:id/items/:itemId/options',
     component: OptionsComponent
   },
   {
-    path: 'category/:id/option/:optionId/item/:itemId',
+    path: 'categories/:id/items/:itemId/options/:optionId/extras',
     component: EditExtrasComponent
   }
 ]

@@ -30,6 +30,6 @@ export class CategoriesComponent {
   constructor(private router: Router) {}
 
   navigateTo(element: Category): void {
-    this.router.navigate([`/category/${element.id}`])
+    this.router.navigate([`/categories/${element.id}/items`])
   }
 }

@@ -44,6 +44,8 @@ export class CategoryItemsComponent {
   }
 
   navigateTo(element: CategoryItem): void {
-    this.router.navigate([`/category/${this.categoryId}/option/${element.id}`])
+    this.router.navigate([
+      `/categories/${this.categoryId}/items/${element.id}/options`
+    ])
   }
 }
