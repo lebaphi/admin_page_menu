@@ -5,23 +5,25 @@ import {
   AfterViewInit,
   ViewChild,
   ElementRef,
-  EventEmitter
+  EventEmitter,
+  OnDestroy
 } from '@angular/core'
 import { MatTableDataSource, MatTable } from '@angular/material/table'
-import { fromEvent } from 'rxjs'
+import { fromEvent, Subscription } from 'rxjs'
 import { debounceTime, map } from 'rxjs/operators'
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatSnackBar } from '@angular/material/snack-bar'
-import { MatDialog } from '@angular/material/dialog'
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
 import { DialogModalComponent } from '../dialog-modal/dialog-modal.component'
+import { ObservableService } from 'src/app/services/observable.service'
 
 @Component({
   selector: 'app-table-view',
   templateUrl: './table-view.component.html',
   styleUrls: ['../../styles/styles.scss', './table-view.component.scss']
 })
-export class TableViewComponent implements AfterViewInit {
+export class TableViewComponent implements AfterViewInit, OnDestroy {
   @ViewChild('searchItem') searchItem: ElementRef<HTMLInputElement>
   @ViewChild('table') table: MatTable<any>
   @ViewChild(MatPaginator) paginator: MatPaginator
@@ -33,8 +35,41 @@ export class TableViewComponent implements AfterViewInit {
 
   routerLink: string
   cloneDataSource: MatTableDataSource<any>
+  subscription: Subscription
+  data: any
 
-  constructor(private snackBar: MatSnackBar, public dialog: MatDialog) {}
+  constructor(
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog,
+    private observable: ObservableService
+  ) {
+    this.subscription = this.observable.subject.subscribe(action => {
+      if (action === 'add') {
+        this.data = {}
+        this.displayedColumns.map(item => {
+          if (item !== 'action') {
+            this.data[item] = ''
+          }
+        })
+        this.data.action = 'add'
+        const config: MatDialogConfig = {
+          width: '50%',
+          data: this.data
+        }
+        const dialogRef = this.dialog.open(DialogModalComponent, config)
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            result.id = this.dataSource.data.length + 1
+            this.dataSource.data.push(result)
+            this.renderTable()
+            /**
+             * update new data to database
+             */
+          }
+        })
+      }
+    })
+  }
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator
@@ -83,19 +118,19 @@ export class TableViewComponent implements AfterViewInit {
   }
 
   edit(element: any): void {
-    const data: any = {}
+    this.data = {}
     this.displayedColumns.map(key => {
       if (key !== 'action') {
-        data[key] = element[key]
-        data.id = element.id
+        this.data[key] = element[key]
+        this.data.id = element.id
       }
     })
 
-    const dialogRef = this.dialog.open(DialogModalComponent, {
-      width: '300px',
-      data
-    })
-
+    const config: MatDialogConfig = {
+      width: '50%',
+      data: this.data
+    }
+    const dialogRef = this.dialog.open(DialogModalComponent, config)
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         const keys = Object.keys(result)
@@ -107,19 +142,32 @@ export class TableViewComponent implements AfterViewInit {
           }
           return row
         })
-        this.dataSource = new MatTableDataSource(updatedData)
+        this.dataSource.data = updatedData
         this.renderTable()
+        /**
+         * update new data to database
+         */
       }
     })
   }
 
   remove(element: any): void {
-    this.snackBar.open(`Delete ${element.id}`, 'Dismiss', {
+    const newData = this.dataSource.data.filter(item => item.id !== element.id)
+    this.dataSource.data = newData
+    this.renderTable()
+    this.snackBar.open(`Deleted successfully`, 'Dismiss', {
       duration: 2000
     })
+    /**
+     * update new data to database
+     */
   }
 
   capital(text: string): string {
     return text.charAt(0).toUpperCase() + text.slice(1)
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe()
   }
 }
