@@ -34,7 +34,12 @@
           <a mat-button matTooltip="Remove" (click)="remove(element)">
             <mat-icon style="color: #b82c2c;">delete_forever</mat-icon>
           </a>
-          <a mat-button matTooltip="Edit items" (click)="navigateTo(element)">
+          <a
+            mat-button
+            matTooltip="Edit items"
+            *ngIf="!lastRoute"
+            (click)="navigateTo(element)"
+          >
             <mat-icon>last_page</mat-icon>
           </a>
         </div>
@@ -47,7 +52,11 @@
               <button mat-menu-item (click)="remove(element)">
                 <mat-icon>delete_outline</mat-icon>Remove
               </button>
-              <button mat-menu-item (click)="navigateTo(element)">
+              <button
+                *ngIf="!lastRoute"
+                mat-menu-item
+                (click)="navigateTo(element)"
+              >
                 <mat-icon>last_page</mat-icon>Edit items
               </button>
             </ng-template>

@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router'
 import { CategoriesComponent } from './components/categories/categories.component'
 import { CategoryItemsComponent } from './components/category-items/category-items.component'
 import { EditExtrasComponent } from './components/edit-extras/edit-extras.component'
+import { OptionsComponent } from './components/options/options.component'
 
 const routes: Routes = [
   {
@@ -14,7 +15,11 @@ const routes: Routes = [
     component: CategoryItemsComponent
   },
   {
-    path: 'category/:id/item/:itemId',
+    path: 'category/:id/option/:optionId',
+    component: OptionsComponent
+  },
+  {
+    path: 'category/:id/option/:optionId/item/:itemId',
     component: EditExtrasComponent
   }
 ]

@@ -1,10 +1,9 @@
 import { Component } from '@angular/core'
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop'
 import { MatTable, MatTableDataSource } from '@angular/material/table'
 import { ActivatedRoute, Router } from '@angular/router'
 import { MatPaginator } from '@angular/material/paginator'
 
-export interface PeriodicElement {
+export interface CategoryItem {
   id: string
   category: string
   item: string
@@ -12,7 +11,7 @@ export interface PeriodicElement {
   price: string
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
+const dataTable: CategoryItem[] = [
   {
     id: '1',
     category: 'Appetizers',
@@ -38,15 +37,13 @@ export class CategoryItemsComponent {
   displayedColumns: string[] = ['item', 'description', 'price', 'action']
   columnWidth = `${100 / this.displayedColumns.length}%`
   categoryId: string
-  table: MatTable<PeriodicElement>
-  dataSource = new MatTableDataSource(ELEMENT_DATA)
-  paginator: MatPaginator
+  dataSource = new MatTableDataSource(dataTable)
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router) {
     this.categoryId = this.activatedRoute.snapshot.params.id
   }
 
-  navigateTo(element: PeriodicElement): void {
-    this.router.navigate([`/category/${this.categoryId}/item/${element.id}`])
+  navigateTo(element: CategoryItem): void {
+    this.router.navigate([`/category/${this.categoryId}/option/${element.id}`])
   }
 }

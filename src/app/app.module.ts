@@ -14,8 +14,11 @@ import { HeaderComponent } from './components/nav/header/header.component'
 import { SidenavListComponent } from './components/nav/sidenav-list/sidenav-list.component'
 import { CategoryItemsComponent } from './components/category-items/category-items.component'
 import { AuthService } from './services/auth.service'
-import { EditExtrasComponent } from './components/edit-extras/edit-extras.component';
+import { EditExtrasComponent } from './components/edit-extras/edit-extras.component'
 import { TableViewComponent } from './components/table-view/table-view.component'
+import { OptionsComponent } from './components/options/options.component'
+import { DialogModalComponent } from './components/dialog-modal/dialog-modal.component'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
 @NgModule({
   declarations: [
@@ -26,7 +29,9 @@ import { TableViewComponent } from './components/table-view/table-view.component
     HeaderComponent,
     CategoryItemsComponent,
     EditExtrasComponent,
-    TableViewComponent
+    TableViewComponent,
+    OptionsComponent,
+    DialogModalComponent
   ],
   imports: [
     BrowserModule,
@@ -34,8 +39,11 @@ import { TableViewComponent } from './components/table-view/table-view.component
     MaterialModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
-    DragDropModule
+    DragDropModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
+  entryComponents: [DialogModalComponent],
   providers: [AuthService],
   bootstrap: [AppComponent]
 })
