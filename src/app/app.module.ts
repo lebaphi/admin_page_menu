@@ -12,6 +12,7 @@ import { MaterialModule } from './material.module'
 import { SidenavListComponent } from './components/nav/sidenav-list/sidenav-list.component'
 import { HeaderComponent } from './components/nav/header/header.component'
 import { FlexLayoutModule } from '@angular/flex-layout'
+import { CookieService } from 'ngx-cookie-service'
 
 const appRoutes: Routes = []
 
@@ -27,7 +28,7 @@ const appRoutes: Routes = []
     BrowserAnimationsModule,
     FlexLayoutModule
   ],
-  providers: [AuthGuard, UnAuthGuard],
+  providers: [AuthGuard, UnAuthGuard, CookieService],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

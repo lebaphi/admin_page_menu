@@ -1,28 +1,30 @@
-<mat-sidenav-container *ngIf="isAuth">
-  <mat-sidenav #sidenav role="navigation">
+<mat-sidenav-container>
+  <mat-sidenav #sidenav role="navigation" [hidden]="!isAuth">
     <app-sidenav-list (closeSidenav)="sidenav.close()"></app-sidenav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <app-header (sidenavToggle)="sidenav.toggle()"></app-header>
-    <main class="main-viewport">
-      <div class="instruction-group">
+    <app-header
+      (sidenavToggle)="sidenav.toggle()"
+      [hidden]="!isAuth"
+    ></app-header>
+    <main>
+      <div class="instruction-group" [hidden]="!isAuth">
         <div class="title">Restaurant Menu Editor</div>
         <div class="instruction">Some instructions here</div>
       </div>
-      <div class="group-action">
-        <button mat-stroked-button (click)="addItem()">
-          <mat-icon>add</mat-icon>
-          <span>Add</span>
-        </button>
-        <button mat-stroked-button (click)="export()">
-          <mat-icon>cloud_download</mat-icon>
-          <span>Export</span>
-        </button>
+      <div class="{{ isAuth ? 'outlet' : '' }}">
+        <div class="group-action">
+          <button mat-stroked-button (click)="addItem()" *ngIf="isAuth">
+            <mat-icon>add</mat-icon>
+            <span>Add</span>
+          </button>
+          <button mat-stroked-button (click)="export()" *ngIf="isAuth">
+            <mat-icon>cloud_download</mat-icon>
+            <span>Export</span>
+          </button>
+        </div>
+        <router-outlet></router-outlet>
       </div>
-      <router-outlet></router-outlet>
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>
-<div *ngIf="!isAuth">
-  <router-outlet></router-outlet>
-</div>

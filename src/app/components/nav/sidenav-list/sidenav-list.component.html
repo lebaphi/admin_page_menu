@@ -2,13 +2,13 @@
   <mat-list-item (click)="addItem()">
     <button mat-icon-button>
       <mat-icon>add</mat-icon>
-      <span>Add</span>
+      <span>New</span>
     </button>
   </mat-list-item>
-  <mat-list-item>
+  <mat-list-item [matMenuTriggerFor]="menu">
     <button mat-icon-button>
       <mat-icon>list</mat-icon>
-      <a [matMenuTriggerFor]="menu">Menu</a>
+      <a>Menu</a>
       <mat-menu #menu="matMenu">
         <button
           mat-menu-item
@@ -22,8 +22,8 @@
     </button>
   </mat-list-item>
   <mat-divider></mat-divider>
-  <mat-list-item>
-    <button mat-icon-button (click)="onLogout()">
+  <mat-list-item (click)="onLogout()">
+    <button mat-icon-button>
       <mat-icon>eject</mat-icon>
       <span>Logout</span>
     </button>

@@ -17,12 +17,14 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private observable: ObservableService,
     private auth: AuthService
-  ) {}
+  ) {
+    this.subscription = this.auth.subject.subscribe(isAuthChanges => {
+      this.isAuth = isAuthChanges
+    })
+  }
 
   ngOnInit(): void {
-    this.subscription = this.auth.subject.subscribe(user => {
-      this.isAuth = !!user
-    })
+    this.isAuth = this.auth.isAuthenticated()
   }
 
   addItem(): void {

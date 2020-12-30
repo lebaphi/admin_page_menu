@@ -10,10 +10,7 @@ import { EditExtrasComponent } from 'src/app/components/edit-extras/edit-extras.
 import { OptionsComponent } from 'src/app/components/options/options.component'
 import { DragDropModule } from '@angular/cdk/drag-drop'
 import { FlexLayoutModule } from '@angular/flex-layout'
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { CategoryItemsComponent } from 'src/app/components/category-items/category-items.component'
-import { SidenavListComponent } from 'src/app/components/nav/sidenav-list/sidenav-list.component'
-import { HeaderComponent } from 'src/app/components/nav/header/header.component'
 import { DialogModalComponent } from 'src/app/components/dialog-modal/dialog-modal.component'
 
 @NgModule({

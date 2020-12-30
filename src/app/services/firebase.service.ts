@@ -22,7 +22,7 @@ export class FirebaseService {
     firebase.auth().signInWithPopup(this.googleProvider)
   }
 
-  logout(): void {
-    firebase.auth().signOut()
+  logout(): Promise<void> {
+    return firebase.auth().signOut()
   }
 }
