@@ -70,8 +70,8 @@ export class AuthService {
   logout(): void {
     this.cookieService.delete('token', '/')
     this.userData = null
-    this.subject.next(false)
     this.firebaseService.logout().then(() => {
+      this.subject.next(false)
       this.router.navigate(['login'])
     })
   }
