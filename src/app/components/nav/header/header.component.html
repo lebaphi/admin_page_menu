@@ -4,9 +4,23 @@
       <mat-icon>menu_open</mat-icon>
     </button>
   </div>
-  <div><a routerLink="/">LOGO</a></div>
+  <div><a routerLink="/">Logo</a></div>
   <div fxFlex fxLayout fxLayoutAlign="end end" fxHide.xs>
-    <ul fxLayout fxLayoutGap="10px" class="navigation-items">
+    <ul fxLayout fxLayoutGap="15px" class="navigation-items">
+      <li><a (click)="newMenu()">Add</a></li>
+      <li>
+        <a [matMenuTriggerFor]="menu">Menu</a>
+        <mat-menu #menu="matMenu">
+          <button
+            mat-menu-item
+            class="menu-item"
+            *ngFor="let menu of menus"
+            (click)="selectMenu(menu)"
+          >
+            {{ menu }}
+          </button>
+        </mat-menu>
+      </li>
       <li><a (click)="logout()">Logout</a></li>
     </ul>
   </div>

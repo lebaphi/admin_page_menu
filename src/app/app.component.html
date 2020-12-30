@@ -1,4 +1,4 @@
-<mat-sidenav-container>
+<mat-sidenav-container *ngIf="isAuth">
   <mat-sidenav #sidenav role="navigation">
     <app-sidenav-list (closeSidenav)="sidenav.close()"></app-sidenav-list>
   </mat-sidenav>
@@ -23,3 +23,6 @@
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>
+<div *ngIf="!isAuth">
+  <router-outlet></router-outlet>
+</div>

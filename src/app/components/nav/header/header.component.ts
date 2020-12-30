@@ -8,13 +8,22 @@ import { AuthService } from 'src/app/services/auth.service'
 })
 export class HeaderComponent implements OnInit {
   @Output() sidenavToggle = new EventEmitter<void>()
+  menus: string[]
 
   constructor(private authService: AuthService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.menus = ['long menu 1', 'long long menu 2']
+  }
 
   toggleSidenav(): void {
     this.sidenavToggle.emit()
+  }
+
+  newMenu(): void {}
+
+  selectMenu(menu: string): void {
+    console.log(menu)
   }
 
   logout(): void {

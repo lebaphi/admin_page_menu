@@ -1,36 +1,34 @@
 import { NgModule } from '@angular/core'
 import { Routes, RouterModule } from '@angular/router'
-import { CategoriesComponent } from './components/categories/categories.component'
-import { CategoryItemsComponent } from './components/category-items/category-items.component'
-import { EditExtrasComponent } from './components/edit-extras/edit-extras.component'
-import { OptionsComponent } from './components/options/options.component'
+import { AuthGuard } from './services/auth-guard.service'
+import { UnAuthGuard } from './services/unAuth-guard.service'
+import { PrivateRoutes } from './routes/private-routes'
+import { PublicRoutes } from './routes/public-routes'
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'categories',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
-    path: 'categories',
-    component: CategoriesComponent
+    path: '',
+    children: PrivateRoutes,
+    canActivate: [AuthGuard]
   },
   {
-    path: 'categories/:id/items',
-    component: CategoryItemsComponent
-  },
-  {
-    path: 'categories/:id/items/:itemId/options',
-    component: OptionsComponent
-  },
-  {
-    path: 'categories/:id/items/:itemId/options/:optionId/extras',
-    component: EditExtrasComponent
+    path: '',
+    children: PublicRoutes,
+    canActivate: [UnAuthGuard]
   }
 ]
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, {
+      initialNavigation: 'enabled'
+    })
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

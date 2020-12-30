@@ -16,6 +16,7 @@ import { MatSortModule } from '@angular/material/sort'
 import { MatMenuModule } from '@angular/material/menu'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { MatDialogModule } from '@angular/material/dialog'
+import { MatSelectModule } from '@angular/material/select'
 
 @NgModule({
   imports: [
@@ -35,7 +36,8 @@ import { MatDialogModule } from '@angular/material/dialog'
     MatSortModule,
     MatMenuModule,
     MatTooltipModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSelectModule
   ],
   exports: [
     MatButtonModule,
@@ -54,7 +56,8 @@ import { MatDialogModule } from '@angular/material/dialog'
     MatSortModule,
     MatMenuModule,
     MatTooltipModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSelectModule
   ]
 })
 export class MaterialModule {}

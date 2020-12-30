@@ -1,50 +1,34 @@
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { NgModule } from '@angular/core'
-
-import { MaterialModule } from './material.module'
-import { FlexLayoutModule } from '@angular/flex-layout'
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { AppRoutingModule } from './app-routing.module'
-import { DragDropModule } from '@angular/cdk/drag-drop'
-
 import { AppComponent } from './app.component'
-import { AuthComponent } from './components/auth/auth.component'
-import { CategoriesComponent } from './components/categories/categories.component'
-import { HeaderComponent } from './components/nav/header/header.component'
+import { UnAuthGuard } from './services/unAuth-guard.service'
+import { AuthGuard } from './services/auth-guard.service'
+import { CommonModule } from '@angular/common'
+import { RouterModule, Routes } from '@angular/router'
+import { HttpClientModule } from '@angular/common/http'
+import { MaterialModule } from './material.module'
 import { SidenavListComponent } from './components/nav/sidenav-list/sidenav-list.component'
-import { CategoryItemsComponent } from './components/category-items/category-items.component'
-import { AuthService } from './services/auth.service'
-import { EditExtrasComponent } from './components/edit-extras/edit-extras.component'
-import { TableViewComponent } from './components/table-view/table-view.component'
-import { OptionsComponent } from './components/options/options.component'
-import { DialogModalComponent } from './components/dialog-modal/dialog-modal.component'
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { HeaderComponent } from './components/nav/header/header.component'
+import { FlexLayoutModule } from '@angular/flex-layout'
+
+const appRoutes: Routes = []
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    AuthComponent,
-    CategoriesComponent,
-    SidenavListComponent,
-    HeaderComponent,
-    CategoryItemsComponent,
-    EditExtrasComponent,
-    TableViewComponent,
-    OptionsComponent,
-    DialogModalComponent
-  ],
+  declarations: [AppComponent, SidenavListComponent, HeaderComponent],
   imports: [
-    BrowserModule,
+    CommonModule,
     AppRoutingModule,
+    BrowserModule,
+    HttpClientModule,
+    RouterModule.forRoot(appRoutes, { relativeLinkResolution: 'legacy' }),
     MaterialModule,
     BrowserAnimationsModule,
-    FlexLayoutModule,
-    DragDropModule,
-    FormsModule,
-    ReactiveFormsModule
+    FlexLayoutModule
   ],
-  entryComponents: [DialogModalComponent],
-  providers: [AuthService],
-  bootstrap: [AppComponent]
+  providers: [AuthGuard, UnAuthGuard],
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

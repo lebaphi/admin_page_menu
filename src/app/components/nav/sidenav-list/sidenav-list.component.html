@@ -1,8 +1,31 @@
 <mat-nav-list>
+  <mat-list-item (click)="addItem()">
+    <button mat-icon-button>
+      <mat-icon>add</mat-icon>
+      <span>Add</span>
+    </button>
+  </mat-list-item>
+  <mat-list-item>
+    <button mat-icon-button>
+      <mat-icon>list</mat-icon>
+      <a [matMenuTriggerFor]="menu">Menu</a>
+      <mat-menu #menu="matMenu">
+        <button
+          mat-menu-item
+          class="menu-item"
+          *ngFor="let menu of menus"
+          (click)="selectMenu(menu)"
+        >
+          {{ menu }}
+        </button>
+      </mat-menu>
+    </button>
+  </mat-list-item>
+  <mat-divider></mat-divider>
   <mat-list-item>
     <button mat-icon-button (click)="onLogout()">
       <mat-icon>eject</mat-icon>
-      <span class="nav-caption">Logout</span>
+      <span>Logout</span>
     </button>
   </mat-list-item>
 </mat-nav-list>

@@ -8,13 +8,22 @@ import { AuthService } from 'src/app/services/auth.service'
 })
 export class SidenavListComponent implements OnInit {
   @Output() closeSidenav = new EventEmitter<void>()
+  menus: string[]
 
   constructor(private authService: AuthService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.menus = ['long menu 1', 'long long menu 2']
+  }
 
   onClose(): void {
     this.closeSidenav.emit()
+  }
+
+  addItem(): void {}
+
+  selectMenu(menu: string): void {
+    console.log(menu)
   }
 
   onLogout(): void {

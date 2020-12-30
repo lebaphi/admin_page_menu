@@ -1,32 +1,39 @@
-import { Component, OnInit } from '@angular/core'
-import { MatSnackBar } from '@angular/material/snack-bar'
-import { Subject } from 'rxjs'
+import { Component, OnInit, OnDestroy } from '@angular/core'
+import { Subject, Subscription } from 'rxjs'
 import { ObservableService } from './services/observable.service'
+import { AuthService } from './services/auth.service'
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
-  title = 'menu-creator'
+export class AppComponent implements OnInit, OnDestroy {
+  title = 'restaurant-menu'
   subject = new Subject<'add' | 'export'>()
+  isAuth: boolean
+  subscription: Subscription
 
-  constructor(private observable: ObservableService) {}
+  constructor(
+    private observable: ObservableService,
+    private auth: AuthService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.subscription = this.auth.subject.subscribe(user => {
+      this.isAuth = !!user
+    })
+  }
 
   addItem(): void {
-    // this.snackBar.open('Add item', 'Dismiss', {
-    //   duration: 2000
-    // })
     this.observable.addItem()
   }
 
   export(): void {
-    // this.snackBar.open('Export item', 'Dismiss', {
-    //   duration: 2000
-    // })
     this.observable.export()
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe()
   }
 }
