@@ -1,21 +1,15 @@
 import { Component } from '@angular/core'
-import { MatTable, MatTableDataSource } from '@angular/material/table'
-import { MatPaginator } from '@angular/material/paginator'
+import { MatTableDataSource } from '@angular/material/table'
 import { Router } from '@angular/router'
+import { FirebaseService } from 'src/app/services/firebase.service'
+import { AuthService } from 'src/app/services/auth.service'
+import firebase from 'firebase/app'
+import { ObservableService } from 'src/app/services/observable.service'
 
 export interface Category {
   id: string
   category: string
 }
-
-const dataTable: Category[] = [
-  { id: '2', category: 'Appetizers' },
-  { id: '1', category: 'Beverages' },
-  { id: '3', category: 'Bento' },
-  { id: '4', category: 'Bento 1' },
-  { id: '5', category: 'Bento 2' },
-  { id: '6', category: 'Bento 3' }
-]
 
 @Component({
   selector: 'app-categories',
@@ -25,11 +19,37 @@ const dataTable: Category[] = [
 export class CategoriesComponent {
   displayedColumns: string[] = ['category', 'action']
   columnWidth = `${100 / this.displayedColumns.length}%`
-  dataSource = new MatTableDataSource(dataTable)
+  dataSource: MatTableDataSource<any>
+  ref: firebase.database.Reference
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private firebaseService: FirebaseService,
+    private authService: AuthService,
+    private observableService: ObservableService
+  ) {
+    this.ref = this.firebaseService.getCategoryRef(this.authService.user.uid)
+    this.ref.once('value', snapshot => {
+      const data = []
+      for (const key of Object.keys(snapshot.val())) {
+        data.push({
+          id: snapshot.val()[key].id,
+          category: snapshot.val()[key].category
+        })
+      }
+      this.dataSource = new MatTableDataSource(data)
+    })
+
+    this.ref.on('child_added', newItem => {
+      this.observableService.addedCategory(newItem.val())
+    })
+  }
 
   navigateTo(element: Category): void {
     this.router.navigate([`/categories/${element.id}/items`])
+  }
+
+  addNewItem(data: Category): void {
+    this.ref.push({ ...data })
   }
 }

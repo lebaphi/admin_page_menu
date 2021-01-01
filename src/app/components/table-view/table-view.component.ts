@@ -15,6 +15,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
+import { v4 as uuidv4 } from 'uuid'
 import { DialogModalComponent } from '../dialog-modal/dialog-modal.component'
 import { ObservableService } from 'src/app/services/observable.service'
 
@@ -28,14 +29,17 @@ export class TableViewComponent implements AfterViewInit, OnDestroy {
   @ViewChild('table') table: MatTable<any>
   @ViewChild(MatPaginator) paginator: MatPaginator
   @Input() dataSource: MatTableDataSource<any>
+  @Input() addedItem: any
   @Input() displayedColumns: string[]
   @Input() columnWidth: string
   @Output() clickedElmEvent = new EventEmitter<ElementRef<HTMLInputElement>>()
   @Input() lastRoute: boolean
+  @Output() addNewItem = new EventEmitter<any>()
 
   routerLink: string
-  cloneDataSource: MatTableDataSource<any>
-  subscription: Subscription
+  cloneDataSource: string[]
+  mainActionsSubscription: Subscription
+  categoryAddedSubscription: Subscription
   data: any
 
   constructor(
@@ -43,37 +47,43 @@ export class TableViewComponent implements AfterViewInit, OnDestroy {
     public dialog: MatDialog,
     private observable: ObservableService
   ) {
-    this.subscription = this.observable.subject.subscribe(action => {
-      if (action === 'add') {
-        this.data = {}
-        this.displayedColumns.map(item => {
-          if (item !== 'action') {
-            this.data[item] = ''
+    this.mainActionsSubscription = this.observable.mainActions.subscribe(
+      action => {
+        if (action === 'add') {
+          this.data = {}
+          this.displayedColumns.map(item => {
+            if (item !== 'action') {
+              this.data[item] = ''
+            }
+          })
+          this.data.action = 'add'
+          const config: MatDialogConfig = {
+            width: '50%',
+            data: this.data
           }
-        })
-        this.data.action = 'add'
-        const config: MatDialogConfig = {
-          width: '50%',
-          data: this.data
+          const dialogRef = this.dialog.open(DialogModalComponent, config)
+          dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+              result.id = uuidv4()
+              delete result.action
+              this.addNewItem.emit(result)
+            }
+          })
         }
-        const dialogRef = this.dialog.open(DialogModalComponent, config)
-        dialogRef.afterClosed().subscribe(result => {
-          if (result) {
-            result.id = this.dataSource.data.length + 1
-            this.dataSource.data.push(result)
-            this.renderTable()
-            /**
-             * update new data to database
-             */
-          }
-        })
       }
-    })
+    )
+
+    this.categoryAddedSubscription = this.observable.categoryItemAdded.subscribe(
+      category => {
+        this.dataSource.data.push(category)
+        this.renderTable()
+      }
+    )
   }
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator
-    this.cloneDataSource = this.dataSource
+    this.cloneDataSource = this.dataSource.data
 
     fromEvent(this.searchItem.nativeElement, 'keyup')
       .pipe(
@@ -82,7 +92,7 @@ export class TableViewComponent implements AfterViewInit, OnDestroy {
       )
       .subscribe(value => {
         this.dataSource.paginator = null
-        const data = this.cloneDataSource.data.filter(
+        const data = this.cloneDataSource.filter(
           item =>
             Object.values(item).filter(
               val =>
@@ -92,7 +102,7 @@ export class TableViewComponent implements AfterViewInit, OnDestroy {
                   .indexOf(value.toLowerCase()) !== -1
             ).length > 0
         )
-        this.dataSource = new MatTableDataSource(data)
+        this.dataSource.data = data
         this.table.renderRows()
         this.dataSource.paginator = this.paginator
       })
@@ -168,6 +178,7 @@ export class TableViewComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe()
+    this.mainActionsSubscription.unsubscribe()
+    this.categoryAddedSubscription.unsubscribe()
   }
 }

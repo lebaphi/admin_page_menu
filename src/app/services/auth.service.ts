@@ -17,14 +17,15 @@ export type User = {
   providedIn: 'root'
 })
 export class AuthService {
-  private userData: User
   subject = new Subject<boolean>()
+  private currentToken: string
 
   constructor(
     private router: Router,
     private firebaseService: FirebaseService,
     private cookieService: CookieService
   ) {
+    this.currentToken = this.cookieService.get('token') || ''
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         const { uid, displayName, email, photoURL, refreshToken } = user
@@ -36,7 +37,7 @@ export class AuthService {
           refreshToken
         }
         this.login(authInfo)
-      } else if (this.userData) {
+      } else if (this.currentToken) {
         this.logout()
       }
     })
@@ -47,31 +48,28 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!this.cookieService.get('token')
+    return !!this.currentToken
   }
 
   get user(): User {
-    return { ...this.userData }
+    return JSON.parse(this.currentToken)
   }
 
   login(user: User): void {
-    const currentToken = this.cookieService.get('token')
-    if (JSON.stringify(user) === currentToken) {
+    if (JSON.stringify(user) === this.currentToken) {
       return
-    } else if (currentToken) {
+    } else if (this.currentToken) {
       this.cookieService.set('token', JSON.stringify(user), 1, '/')
     }
     this.subject.next(true)
-    this.userData = user
     this.cookieService.set('token', JSON.stringify(user), 1, '/')
     this.router.navigate(['categories'])
   }
 
   logout(): void {
     this.cookieService.delete('token', '/')
-    this.userData = null
+    this.subject.next(false)
     this.firebaseService.logout().then(() => {
-      this.subject.next(false)
       this.router.navigate(['login'])
     })
   }

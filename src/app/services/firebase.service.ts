@@ -1,10 +1,9 @@
+import { environment } from '../../environments/environment'
 import { Injectable } from '@angular/core'
 import firebase from 'firebase/app'
 import 'firebase/database'
 import 'firebase/auth'
-
-import { environment } from '../../environments/environment'
-import { User, AuthService } from './auth.service'
+import { AuthService } from './auth.service'
 
 @Injectable({
   providedIn: 'root'
@@ -24,5 +23,9 @@ export class FirebaseService {
 
   logout(): Promise<void> {
     return firebase.auth().signOut()
+  }
+
+  getCategoryRef(uid: string): firebase.database.Reference {
+    return this.db.ref(`users/${uid}`)
   }
 }

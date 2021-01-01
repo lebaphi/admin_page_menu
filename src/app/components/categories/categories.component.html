@@ -4,10 +4,13 @@
   </div>
   <div>
     <app-table-view
+      *ngIf="dataSource"
       [dataSource]="dataSource"
       [displayedColumns]="displayedColumns"
       [columnWidth]="columnWidth"
+      [addedItem]="addedItem"
       (clickedElmEvent)="navigateTo($event)"
+      (addNewItem)="addNewItem($event)"
     ></app-table-view>
   </div>
 </div>

@@ -6,7 +6,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
   templateUrl: './dialog-modal.component.html',
   styleUrls: ['./dialog-modal.component.scss']
 })
-export class DialogModalComponent implements OnInit {
+export class DialogModalComponent {
   keys: string[]
   values: string[]
 
@@ -20,6 +20,4 @@ export class DialogModalComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close()
   }
-
-  ngOnInit(): void {}
 }

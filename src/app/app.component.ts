@@ -28,7 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   addItem(): void {
-    this.observable.addItem()
+    this.observable.add()
   }
 
   export(): void {
