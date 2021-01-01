@@ -18,7 +18,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private observable: ObservableService,
     private auth: AuthService
   ) {
-    this.subscription = this.auth.subject.subscribe(isAuthChanges => {
+    this.subscription = this.auth.showNavSubject.subscribe(isAuthChanges => {
       this.isAuth = isAuthChanges
     })
   }

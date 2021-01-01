@@ -17,7 +17,7 @@ export type User = {
   providedIn: 'root'
 })
 export class AuthService {
-  subject = new Subject<boolean>()
+  showNavSubject = new Subject<boolean>()
   private currentToken: string
 
   constructor(
@@ -36,6 +36,7 @@ export class AuthService {
           photoURL,
           refreshToken
         }
+        this.currentToken = JSON.stringify(user)
         this.login(authInfo)
       } else if (this.currentToken) {
         this.logout()
@@ -61,14 +62,15 @@ export class AuthService {
     } else if (this.currentToken) {
       this.cookieService.set('token', JSON.stringify(user), 1, '/')
     }
-    this.subject.next(true)
     this.cookieService.set('token', JSON.stringify(user), 1, '/')
+    this.showNavSubject.next(true)
     this.router.navigate(['categories'])
   }
 
   logout(): void {
     this.cookieService.delete('token', '/')
-    this.subject.next(false)
+    this.currentToken = ''
+    this.showNavSubject.next(false)
     this.firebaseService.logout().then(() => {
       this.router.navigate(['login'])
     })
