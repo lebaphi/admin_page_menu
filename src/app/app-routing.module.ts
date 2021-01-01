@@ -20,6 +20,10 @@ const routes: Routes = [
     path: '',
     children: PublicRoutes,
     canActivate: [UnAuthGuard]
+  },
+  {
+    path: '**',
+    redirectTo: '/login'
   }
 ]
 
