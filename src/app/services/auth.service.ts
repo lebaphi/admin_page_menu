@@ -36,7 +36,6 @@ export class AuthService {
           photoURL,
           refreshToken
         }
-        this.currentToken = JSON.stringify(user)
         this.login(authInfo)
       } else if (this.currentToken) {
         this.logout()
@@ -57,14 +56,12 @@ export class AuthService {
   }
 
   login(user: User): void {
-    if (JSON.stringify(user) === this.currentToken) {
-      return
-    } else if (this.currentToken) {
-      this.cookieService.set('token', JSON.stringify(user), 1, '/')
-    }
     this.cookieService.set('token', JSON.stringify(user), 1, '/')
+    this.currentToken = JSON.stringify(user)
     this.showNavSubject.next(true)
-    this.router.navigate(['categories'])
+    if (this.router.url === '/login') {
+      this.router.navigate(['categories'])
+    }
   }
 
   logout(): void {
