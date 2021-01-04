@@ -1,0 +1,70 @@
+.login-panel {
+  background: url('../../../../assets/backgrounds/dark-material-bg.jpg');
+  background-size: cover;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+.login-box {
+  position: absolute;
+  text-align: center;
+  background-color: white;
+  width: 300px;
+  height: auto;
+  margin-top: 10%;
+  margin-left: calc(50% - 150px);
+  border-radius: 10px;
+  padding: 5px 10px 40px 10px;
+
+  button {
+    margin-top: 10px;
+  }
+}
+
+mat-form-field {
+  width: 300px;
+}
+
+.separator {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 24px auto;
+  position: relative;
+  overflow: hidden;
+  width: 100px;
+
+  .text {
+    display: inline-flex;
+    position: relative;
+    padding: 0 8px;
+    z-index: 9999;
+    color: black;
+
+    &:before,
+    &:after {
+      content: '';
+      display: block;
+      width: 30px;
+      position: absolute;
+      top: 10px;
+      border-top: 1px solid;
+    }
+
+    &:before {
+      right: 100%;
+    }
+
+    &:after {
+      left: 100%;
+    }
+  }
+}
+
+.signup {
+  width: 100%;
+  text-align: right;
+  text-decoration: none;
+  font-weight: lighter;
+  cursor: pointer;
+}

@@ -9,15 +9,13 @@ import {
   OnDestroy
 } from '@angular/core'
 import { MatTableDataSource, MatTable } from '@angular/material/table'
-import { fromEvent, Subscription } from 'rxjs'
-import { debounceTime, map } from 'rxjs/operators'
+import { Subscription } from 'rxjs'
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
-import { v4 as uuidv4 } from 'uuid'
-import { DialogModalComponent } from '../dialog-modal/dialog-modal.component'
 import { ObservableService } from 'src/app/services/observable.service'
+import { DialogModalComponent } from 'src/app/shared/dialog-modal/dialog-modal.component'
 
 @Component({
   selector: 'app-table-view',
@@ -25,16 +23,17 @@ import { ObservableService } from 'src/app/services/observable.service'
   styleUrls: ['../../styles/styles.scss', './table-view.component.scss']
 })
 export class TableViewComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('searchItem') searchItem: ElementRef<HTMLInputElement>
   @ViewChild('table') table: MatTable<any>
   @ViewChild(MatPaginator) paginator: MatPaginator
   @Input() dataSource: MatTableDataSource<any>
   @Input() addedItem: any
   @Input() displayedColumns: string[]
   @Input() columnWidth: string
-  @Output() clickedElmEvent = new EventEmitter<ElementRef<HTMLInputElement>>()
   @Input() lastRoute: boolean
+  @Output() clickedElmEvent = new EventEmitter<ElementRef<HTMLInputElement>>()
   @Output() addNewItem = new EventEmitter<any>()
+  @Output() removeItem = new EventEmitter<any>()
+  @Output() updateItem = new EventEmitter<any>()
 
   routerLink: string
   cloneDataSource: string[]
@@ -64,7 +63,6 @@ export class TableViewComponent implements AfterViewInit, OnDestroy {
           const dialogRef = this.dialog.open(DialogModalComponent, config)
           dialogRef.afterClosed().subscribe(result => {
             if (result) {
-              result.id = uuidv4()
               delete result.action
               this.addNewItem.emit(result)
             }
@@ -83,29 +81,6 @@ export class TableViewComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator
-    this.cloneDataSource = this.dataSource.data
-
-    fromEvent(this.searchItem.nativeElement, 'keyup')
-      .pipe(
-        debounceTime(500),
-        map((event: any) => event.target.value)
-      )
-      .subscribe(value => {
-        this.dataSource.paginator = null
-        const data = this.cloneDataSource.filter(
-          item =>
-            Object.values(item).filter(
-              val =>
-                val
-                  .toString()
-                  .toLowerCase()
-                  .indexOf(value.toLowerCase()) !== -1
-            ).length > 0
-        )
-        this.dataSource.data = data
-        this.table.renderRows()
-        this.dataSource.paginator = this.paginator
-      })
   }
 
   renderTable(): void {
@@ -127,6 +102,10 @@ export class TableViewComponent implements AfterViewInit, OnDestroy {
     this.clickedElmEvent.emit(element)
   }
 
+  doFilter(filterValue: string): void {
+    this.dataSource.filter = filterValue.trim().toLowerCase()
+  }
+
   edit(element: any): void {
     this.data = {}
     this.displayedColumns.map(key => {
@@ -143,34 +122,13 @@ export class TableViewComponent implements AfterViewInit, OnDestroy {
     const dialogRef = this.dialog.open(DialogModalComponent, config)
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const keys = Object.keys(result)
-        const updatedData = this.dataSource.data.map(row => {
-          if (result.id === row.id) {
-            keys.map(key => {
-              row[key] = result[key]
-            })
-          }
-          return row
-        })
-        this.dataSource.data = updatedData
-        this.renderTable()
-        /**
-         * update new data to database
-         */
+        this.updateItem.emit(result)
       }
     })
   }
 
   remove(element: any): void {
-    const newData = this.dataSource.data.filter(item => item.id !== element.id)
-    this.dataSource.data = newData
-    this.renderTable()
-    this.snackBar.open(`Deleted successfully`, 'Dismiss', {
-      duration: 2000
-    })
-    /**
-     * update new data to database
-     */
+    this.removeItem.emit(element)
   }
 
   capital(text: string): string {

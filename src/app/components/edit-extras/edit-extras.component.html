@@ -8,6 +8,9 @@
       [displayedColumns]="displayedColumns"
       [columnWidth]="columnWidth"
       [lastRoute]="true"
+      (addNewItem)="addNewItem($event)"
+      (removeItem)="removeItem($event)"
+      (updateItem)="updatedItem($event)"
     ></app-table-view>
   </div>
 </div>

@@ -8,9 +8,10 @@
       [dataSource]="dataSource"
       [displayedColumns]="displayedColumns"
       [columnWidth]="columnWidth"
-      [addedItem]="addedItem"
       (clickedElmEvent)="navigateTo($event)"
       (addNewItem)="addNewItem($event)"
+      (removeItem)="removeItem($event)"
+      (updateItem)="updatedItem($event)"
     ></app-table-view>
   </div>
 </div>

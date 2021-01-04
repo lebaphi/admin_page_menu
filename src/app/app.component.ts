@@ -24,7 +24,8 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.isAuth = this.auth.isAuthenticated()
+    this.auth.initAuthListener()
+    this.isAuth = this.auth.isAuth()
   }
 
   addItem(): void {

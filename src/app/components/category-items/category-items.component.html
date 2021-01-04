@@ -8,6 +8,9 @@
       [displayedColumns]="displayedColumns"
       [columnWidth]="columnWidth"
       (clickedElmEvent)="navigateTo($event)"
+      (addNewItem)="addNewItem($event)"
+      (removeItem)="removeItem($event)"
+      (updateItem)="updatedItem($event)"
     ></app-table-view>
   </div>
 </div>

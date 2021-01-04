@@ -4,7 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
 import { MaterialModule } from '../../material.module'
 import { PublicRoutingModule } from './public-routing.module'
-import { LoginComponent } from 'src/app/components/login/login.component'
+import { FlexLayoutModule } from '@angular/flex-layout'
+import { LoginComponent } from 'src/app/components/auth/login/login.component'
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import { LoginComponent } from 'src/app/components/login/login.component'
     FormsModule,
     ReactiveFormsModule,
     PublicRoutingModule,
-    MaterialModule
+    MaterialModule,
+    FlexLayoutModule
   ],
   exports: [],
   declarations: [LoginComponent],

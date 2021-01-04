@@ -23,7 +23,12 @@
         style="text-align: right; margin: 0 10px 0 10px;"
       >
         <mat-form-field>
-          <input #searchItem matInput type="text" placeholder="Search..." />
+          <input
+            matInput
+            type="text"
+            placeholder="Search..."
+            (keyup)="doFilter($event.target.value)"
+          />
         </mat-form-field>
       </th>
       <td mat-cell *matCellDef="let element">

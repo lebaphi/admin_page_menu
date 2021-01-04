@@ -1,10 +1,15 @@
-import { Component } from '@angular/core'
+import { Component, OnInit, OnDestroy } from '@angular/core'
 import { MatTableDataSource } from '@angular/material/table'
 import { Router } from '@angular/router'
-import { FirebaseService } from 'src/app/services/firebase.service'
-import { AuthService } from 'src/app/services/auth.service'
-import firebase from 'firebase/app'
-import { ObservableService } from 'src/app/services/observable.service'
+import {
+  AngularFirestore,
+  AngularFirestoreCollection
+} from '@angular/fire/firestore'
+import { map } from 'rxjs/operators'
+import { UIService } from 'src/app/shared/ui.service'
+import { MatDialog } from '@angular/material/dialog'
+import { ConfirmDialogComponent } from 'src/app/shared/confirm.modal'
+import { Subscription } from 'rxjs'
 
 export interface Category {
   id: string
@@ -16,40 +21,76 @@ export interface Category {
   templateUrl: './categories.component.html',
   styleUrls: ['../../styles/styles.scss', './categories.component.scss']
 })
-export class CategoriesComponent {
+export class CategoriesComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['category', 'action']
   columnWidth = `${100 / this.displayedColumns.length}%`
-  dataSource: MatTableDataSource<any>
-  ref: firebase.database.Reference
+  dataSource = new MatTableDataSource<Category>()
+  ref: AngularFirestoreCollection
+  private categorySub: Subscription
 
   constructor(
+    private db: AngularFirestore,
     private router: Router,
-    private firebaseService: FirebaseService,
-    private authService: AuthService,
-    private observableService: ObservableService
+    private uiService: UIService,
+    private dialog: MatDialog
   ) {
-    this.ref = this.firebaseService.getCategoryRef(this.authService.user.uid)
-    this.ref.once('value', snapshot => {
-      const data = []
-      for (const key of Object.keys(snapshot.val())) {
-        data.push({
-          id: snapshot.val()[key].id,
-          category: snapshot.val()[key].category
-        })
-      }
-      this.dataSource = new MatTableDataSource(data)
-    })
+    this.ref = this.db.collection('categories')
+  }
 
-    this.ref.on('child_added', newItem => {
-      this.observableService.addedCategory(newItem.val())
-    })
+  ngOnInit(): void {
+    this.categorySub = this.ref
+      .snapshotChanges()
+      .pipe(
+        map(docArray => {
+          return docArray.map(doc => {
+            const { category } = doc.payload.doc.data() as Category
+            return {
+              id: doc.payload.doc.id,
+              category
+            }
+          })
+        })
+      )
+      .subscribe(
+        (categories: Category[]) => {
+          this.uiService.loadingStateChanged.next(false)
+          this.dataSource.data = categories
+        },
+        err => {
+          this.uiService.loadingStateChanged.next(false)
+          this.uiService.showSnackBar(
+            'Fetching category failed, please try again later',
+            null,
+            3000
+          )
+        }
+      )
   }
 
   navigateTo(element: Category): void {
     this.router.navigate([`/categories/${element.id}/items`])
   }
 
-  addNewItem(data: Category): void {
-    this.ref.push({ ...data })
+  addNewItem(item: Category): void {
+    this.ref.add({ ...item })
+  }
+
+  removeItem(item: Category): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent)
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.ref.doc(item.id).delete()
+      }
+    })
+  }
+
+  updatedItem(item: Category): void {
+    this.ref.doc(item.id).set({ category: item.category }, { merge: true })
+  }
+
+  ngOnDestroy(): void {
+    if (this.categorySub) {
+      this.categorySub.unsubscribe()
+    }
   }
 }
