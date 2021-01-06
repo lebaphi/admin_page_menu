@@ -14,8 +14,8 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
-import { ObservableService } from 'src/app/services/observable.service'
 import { DialogModalComponent } from 'src/app/shared/dialog-modal/dialog-modal.component'
+import { ObservableService } from 'src/app/shared/services/observable.service'
 
 @Component({
   selector: 'app-table-view',

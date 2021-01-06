@@ -7,17 +7,22 @@
   <div><a routerLink="/">Logo</a></div>
   <div fxFlex fxLayout fxLayoutAlign="end end" fxHide.xs>
     <ul fxLayout fxLayoutGap="15px" class="navigation-items">
-      <li><a (click)="newMenu()">New</a></li>
       <li>
         <a [matMenuTriggerFor]="menu">Menu</a>
         <mat-menu #menu="matMenu">
+          <button mat-menu-item class="menu-item" (click)="newMenu()">
+            <mat-icon>add</mat-icon>
+            <span>New menu</span>
+          </button>
+          <mat-divider></mat-divider>
           <button
             mat-menu-item
             class="menu-item"
             *ngFor="let menu of menus"
             (click)="selectMenu(menu)"
           >
-            {{ menu }}
+            <mat-icon>menu</mat-icon>
+            <span>{{ menu }}</span>
           </button>
         </mat-menu>
       </li>

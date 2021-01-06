@@ -15,7 +15,7 @@
   margin-top: 10%;
   margin-left: calc(50% - 150px);
   border-radius: 10px;
-  padding: 5px 10px 40px 10px;
+  padding: 5px 10px 20px 10px;
 
   button {
     margin-top: 10px;
@@ -29,7 +29,7 @@ mat-form-field {
 .separator {
   font-size: 15px;
   font-weight: 600;
-  margin: 24px auto;
+  margin: 15px auto;
   position: relative;
   overflow: hidden;
   width: 100px;
@@ -37,7 +37,7 @@ mat-form-field {
   .text {
     display: inline-flex;
     position: relative;
-    padding: 0 8px;
+    padding: 0 8px 0 8px;
     z-index: 9999;
     color: black;
 
@@ -67,4 +67,5 @@ mat-form-field {
   text-decoration: none;
   font-weight: lighter;
   cursor: pointer;
+  margin-bottom: 20px;
 }

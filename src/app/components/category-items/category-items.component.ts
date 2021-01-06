@@ -6,10 +6,10 @@ import {
 } from '@angular/fire/firestore'
 import { map } from 'rxjs/operators'
 import { MatTableDataSource } from '@angular/material/table'
-import { UIService } from 'src/app/shared/ui.service'
 import { MatDialog } from '@angular/material/dialog'
-import { ConfirmDialogComponent } from 'src/app/shared/confirm.modal'
 import { Subscription } from 'rxjs'
+import { UIService } from 'src/app/shared/services/ui.service'
+import { ConfirmDialogComponent } from 'src/app/shared/confirm-modal/confirm.modal'
 
 export interface CategoryItem {
   id: string

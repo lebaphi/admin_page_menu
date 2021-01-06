@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core'
 import { Routes, RouterModule } from '@angular/router'
-import { AuthGuard } from './services/auth-guard.service'
-import { UnAuthGuard } from './services/unAuth-guard.service'
 import { PrivateRoutes } from './routes/private-routes'
 import { PublicRoutes } from './routes/public-routes'
+import { AuthGuard } from './shared/services/auth-guard.service'
+import { UnAuthGuard } from './shared/services/unAuth-guard.service'
 
 const routes: Routes = [
   {

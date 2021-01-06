@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { Subject } from 'rxjs'
-import { UIService } from '../shared/ui.service'
 import { AngularFireAuth } from '@angular/fire/auth'
 import firebase from 'firebase'
+import { CookieService } from 'ngx-cookie-service'
+import { UIService } from './ui.service'
 
 export type User = {
   uid: string
@@ -23,12 +24,12 @@ export interface AuthData {
 })
 export class AuthService {
   showNavSubject = new Subject<boolean>()
-  private isAuthenticated = false
 
   constructor(
     private router: Router,
     private afauth: AngularFireAuth,
-    private uiService: UIService
+    private uiService: UIService,
+    private cookiesService: CookieService
   ) {}
 
   initAuthListener(): void {
@@ -36,11 +37,19 @@ export class AuthService {
     this.afauth.authState.subscribe(user => {
       this.uiService.loadingStateChanged.next(false)
       if (user) {
-        this.isAuthenticated = true
+        console.log(user.providerData[0].uid)
+        this.cookiesService.set(
+          'authData',
+          JSON.stringify(user.providerData),
+          1,
+          '/'
+        )
         this.showNavSubject.next(true)
-        this.router.navigate(['/categories'])
+        if (this.router.url === '/login') {
+          this.router.navigate(['/categories'])
+        }
       } else {
-        this.isAuthenticated = false
+        this.cookiesService.delete('authData', '/')
         this.showNavSubject.next(false)
         this.router.navigate(['/login'])
       }
@@ -84,6 +93,6 @@ export class AuthService {
   }
 
   isAuth(): boolean {
-    return this.isAuthenticated
+    return !!this.cookiesService.get('authData')
   }
 }
