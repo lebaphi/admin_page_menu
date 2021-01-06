@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core'
 import { Subject, Subscription } from 'rxjs'
 import { ObservableService } from './shared/services/observable.service'
 import { AuthService } from './shared/services/auth.service'
+import { UIService } from './shared/services/ui.service'
+import { Menu } from './components/categories/categories.component'
 
 @Component({
   selector: 'app-root',
@@ -12,13 +14,17 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'restaurant-menu'
   subject = new Subject<'add' | 'export'>()
   isAuth: boolean
-  subscription: Subscription
+  menuName: string
+
+  private navSub: Subscription
+  private categorySub: Subscription
 
   constructor(
     private observable: ObservableService,
-    private auth: AuthService
+    private auth: AuthService,
+    private uiService: UIService
   ) {
-    this.subscription = this.auth.showNavSubject.subscribe(isAuthChanges => {
+    this.navSub = this.auth.showNavSubject.subscribe(isAuthChanges => {
       this.isAuth = isAuthChanges
     })
   }
@@ -26,6 +32,11 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.auth.initAuthListener()
     this.isAuth = this.auth.isAuth()
+    this.categorySub = this.uiService.categoryListChanged.subscribe(
+      (menu: Menu) => {
+        this.menuName = menu.name
+      }
+    )
   }
 
   addItem(): void {
@@ -37,6 +48,11 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe()
+    if (this.categorySub) {
+      this.categorySub.unsubscribe()
+    }
+    if (this.navSub) {
+      this.navSub.unsubscribe()
+    }
   }
 }

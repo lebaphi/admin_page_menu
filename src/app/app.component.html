@@ -9,7 +9,7 @@
     ></app-header>
     <main>
       <div class="instruction-group" [hidden]="!isAuth">
-        <div class="title">Restaurant Menu Editor</div>
+        <div class="title">{{ menuName }}</div>
         <div class="instruction">Some instructions here</div>
       </div>
       <div class="{{ isAuth ? 'outlet' : '' }}">

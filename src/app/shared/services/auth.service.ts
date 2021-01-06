@@ -11,7 +11,6 @@ export type User = {
   displayName: string
   email: string
   photoURL: string
-  refreshToken: string
 }
 
 export interface AuthData {
@@ -24,6 +23,7 @@ export interface AuthData {
 })
 export class AuthService {
   showNavSubject = new Subject<boolean>()
+  private user: User
 
   constructor(
     private router: Router,
@@ -37,10 +37,9 @@ export class AuthService {
     this.afauth.authState.subscribe(user => {
       this.uiService.loadingStateChanged.next(false)
       if (user) {
-        console.log(user.providerData[0].uid)
         this.cookiesService.set(
           'authData',
-          JSON.stringify(user.providerData),
+          JSON.stringify(user.providerData[0]),
           1,
           '/'
         )
@@ -93,6 +92,10 @@ export class AuthService {
   }
 
   isAuth(): boolean {
-    return !!this.cookiesService.get('authData')
+    return !!this.getUser()
+  }
+
+  getUser(): User {
+    return JSON.parse(this.cookiesService.get('authData'))
   }
 }

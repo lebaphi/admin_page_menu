@@ -12,7 +12,6 @@ import { MatTableDataSource, MatTable } from '@angular/material/table'
 import { Subscription } from 'rxjs'
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop'
 import { MatPaginator } from '@angular/material/paginator'
-import { MatSnackBar } from '@angular/material/snack-bar'
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
 import { DialogModalComponent } from 'src/app/shared/dialog-modal/dialog-modal.component'
 import { ObservableService } from 'src/app/shared/services/observable.service'
@@ -37,41 +36,37 @@ export class TableViewComponent implements AfterViewInit, OnDestroy {
 
   routerLink: string
   cloneDataSource: string[]
-  mainActionsSubscription: Subscription
-  categoryAddedSubscription: Subscription
+
+  private dialogSub: Subscription
+  private mainActionsSub: Subscription
+  private categoryAddedSub: Subscription
   data: any
 
-  constructor(
-    private snackBar: MatSnackBar,
-    public dialog: MatDialog,
-    private observable: ObservableService
-  ) {
-    this.mainActionsSubscription = this.observable.mainActions.subscribe(
-      action => {
-        if (action === 'add') {
-          this.data = {}
-          this.displayedColumns.map(item => {
-            if (item !== 'action') {
-              this.data[item] = ''
-            }
-          })
-          this.data.action = 'add'
-          const config: MatDialogConfig = {
-            width: '50%',
-            data: this.data
+  constructor(public dialog: MatDialog, private observable: ObservableService) {
+    this.mainActionsSub = this.observable.mainActions.subscribe(action => {
+      if (action === 'add') {
+        this.data = {}
+        this.displayedColumns.map(item => {
+          if (item !== 'action') {
+            this.data[item] = ''
           }
-          const dialogRef = this.dialog.open(DialogModalComponent, config)
-          dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-              delete result.action
-              this.addNewItem.emit(result)
-            }
-          })
+        })
+        this.data.action = 'add'
+        const config: MatDialogConfig = {
+          width: '50%',
+          data: this.data
         }
+        const dialogRef = this.dialog.open(DialogModalComponent, config)
+        this.dialogSub = dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            delete result.action
+            this.addNewItem.emit(result)
+          }
+        })
       }
-    )
+    })
 
-    this.categoryAddedSubscription = this.observable.categoryItemAdded.subscribe(
+    this.categoryAddedSub = this.observable.categoryItemAdded.subscribe(
       category => {
         this.dataSource.data.push(category)
         this.renderTable()
@@ -136,7 +131,14 @@ export class TableViewComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.mainActionsSubscription.unsubscribe()
-    this.categoryAddedSubscription.unsubscribe()
+    if (this.mainActionsSub) {
+      this.mainActionsSub.unsubscribe()
+    }
+    if (this.categoryAddedSub) {
+      this.categoryAddedSub.unsubscribe()
+    }
+    if (this.dialogSub) {
+      this.dialogSub.unsubscribe()
+    }
   }
 }

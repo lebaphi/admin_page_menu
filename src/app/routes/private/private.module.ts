@@ -13,6 +13,7 @@ import { FlexLayoutModule } from '@angular/flex-layout'
 import { CategoryItemsComponent } from 'src/app/components/category-items/category-items.component'
 import { DialogModalComponent } from 'src/app/shared/dialog-modal/dialog-modal.component'
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-modal/confirm.modal'
+import { MenuDialogComponent } from 'src/app/shared/new-menu-modal/new-menu.component'
 
 @NgModule({
   imports: [
@@ -24,7 +25,11 @@ import { ConfirmDialogComponent } from 'src/app/shared/confirm-modal/confirm.mod
     FlexLayoutModule,
     DragDropModule
   ],
-  entryComponents: [DialogModalComponent, ConfirmDialogComponent],
+  entryComponents: [
+    DialogModalComponent,
+    ConfirmDialogComponent,
+    MenuDialogComponent
+  ],
   exports: [],
   declarations: [
     CategoriesComponent,
@@ -33,7 +38,8 @@ import { ConfirmDialogComponent } from 'src/app/shared/confirm-modal/confirm.mod
     OptionsComponent,
     CategoryItemsComponent,
     DialogModalComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    MenuDialogComponent
   ],
   providers: []
 })
