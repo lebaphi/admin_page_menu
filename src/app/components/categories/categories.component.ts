@@ -167,6 +167,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
           .doc(this.uiService.selectedMenu.id)
           .set({ categoryIds }, { merge: true })
           .then(() => {
+            this.uiService.selectedMenu.categoryIds = categoryIds
             this.categoriesRef.doc(item.id).delete()
           })
       }
