@@ -18,6 +18,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private navSub: Subscription
   private categorySub: Subscription
+  private menuListChanged: Subscription
 
   constructor(
     private observable: ObservableService,
@@ -37,6 +38,19 @@ export class AppComponent implements OnInit, OnDestroy {
         this.menu = menu
       }
     )
+    this.menuListChanged = this.uiService.menuListChanged.subscribe(
+      (menus: Menu[]) => {
+        if (!menus.length) {
+          this.menu = {
+            name: `Please create your first menu`,
+            uid: null,
+            categoryIds: [],
+            id: null,
+            createdDate: null
+          }
+        }
+      }
+    )
   }
 
   addItem(): void {
@@ -53,6 +67,9 @@ export class AppComponent implements OnInit, OnDestroy {
     }
     if (this.navSub) {
       this.navSub.unsubscribe()
+    }
+    if (this.menuListChanged) {
+      this.menuListChanged.unsubscribe()
     }
   }
 }

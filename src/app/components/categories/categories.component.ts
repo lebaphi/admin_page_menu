@@ -58,11 +58,13 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     this.menuSub = this.fetchMenu().subscribe(
       (menus: Menu[]) => {
         this.uiService.menuListChanged.next(menus)
-        if (this.uiService.initialLoad) {
-          this.uiService.initialLoaded()
-          this.uiService.setSelectedMenu(menus[0])
+        if (menus.length) {
+          if (this.uiService.initialLoad) {
+            this.uiService.initialLoaded()
+            this.uiService.setSelectedMenu(menus[0])
+          }
+          this.uiService.categoryListChanged.next(this.uiService.selectedMenu)
         }
-        this.uiService.categoryListChanged.next(this.uiService.selectedMenu)
       },
       err => this.showError('Fetching menu failed, please try again later')
     )
@@ -93,6 +95,9 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     )
     return this.menuRef.snapshotChanges().pipe(
       map(docArray => {
+        if (!docArray.length) {
+          return []
+        }
         const mappedMenus = docArray.map(doc => {
           const {
             categoryIds,
