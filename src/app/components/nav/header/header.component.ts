@@ -10,9 +10,9 @@ import { UIService } from 'src/app/shared/services/ui.service'
 import { Menu } from '../../categories/categories.component'
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
 import { Subscription } from 'rxjs'
-import { MenuDialogComponent } from 'src/app/shared/new-menu-modal/new-menu.component'
 import { AngularFirestore } from '@angular/fire/firestore'
 import { AngularFirestoreCollection } from '@angular/fire/firestore'
+import { MenuDialogComponent } from 'src/app/shared/modals/new-menu-modal/new-menu.component'
 
 @Component({
   selector: 'app-header',
@@ -24,6 +24,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   menus: Menu[]
 
   private dialogSub: Subscription
+  private menuListSub: Subscription
+  private addNewMenuSub: Subscription
   private ref: AngularFirestoreCollection
 
   constructor(
@@ -36,8 +38,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.uiService.menuListChanged.subscribe(menus => {
+    this.menuListSub = this.uiService.menuListChanged.subscribe(menus => {
       this.menus = menus
+    })
+    this.addNewMenuSub = this.uiService.addNewMenuEvent.subscribe(() => {
+      this.newMenu()
     })
   }
 
@@ -48,20 +53,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
   newMenu(): void {
     const config: MatDialogConfig = {
       width: '50%',
-      data: ''
+      data: {
+        name: '',
+        description: ''
+      }
     }
     const menuRef = this.dialog.open(MenuDialogComponent, config)
     this.dialogSub = menuRef.afterClosed().subscribe(result => {
-      const newMenu = {
-        name: result,
-        createdDate: new Date(),
-        uid: this.authService.getUser().uid,
-        categoryIds: [],
-        id: ''
+      if (result) {
+        const newMenu = {
+          name: result.name,
+          createdDate: new Date(),
+          uid: this.authService.getUser().uid,
+          categoryIds: [],
+          description: result.description
+        }
+        this.ref.add(newMenu).then(({ id }) => {
+          this.selectMenu({ id, ...newMenu })
+        })
       }
-      this.ref.add(newMenu).then(() => {
-        this.selectMenu(newMenu)
-      })
     })
   }
 
@@ -76,6 +86,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.dialogSub) {
       this.dialogSub.unsubscribe()
+    }
+    if (this.menuListSub) {
+      this.menuListSub.unsubscribe()
+    }
+    if (this.addNewMenuSub) {
+      this.addNewMenuSub.unsubscribe()
     }
   }
 }

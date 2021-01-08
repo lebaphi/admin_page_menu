@@ -6,10 +6,10 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog'
   template: `
     <h1 mat-dialog-title>Are you sure?</h1>
 
-    <mat-dialog-actions>
+    <div mat-dialog-actions>
       <button mat-raised-button [mat-dialog-close]="true">Yes</button>
       <button mat-raised-button [mat-dialog-close]="false">No</button>
-    </mat-dialog-actions>
+    </div>
   `
 })
 export class ConfirmDialogComponent {

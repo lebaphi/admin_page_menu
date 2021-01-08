@@ -1,0 +1,29 @@
+<form fxLayout="column" #f="ngForm">
+  <h1 mat-dialog-title>
+    {{ data.action === 'add' ? 'Add new item' : 'Edit' }}
+  </h1>
+  <div mat-dialog-content *ngFor="let key of keys">
+    <mat-form-field *ngIf="key !== 'id' && key !== 'action'">
+      <input
+        matInput
+        type="{{ key === 'price' ? 'number' : 'text' }}"
+        [(ngModel)]="data[key]"
+        name="{{ key }}"
+        placeholder="{{ key }}"
+        required
+      />
+      <mat-error>Field must not be empty.</mat-error>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button (click)="onNoClick()">Cancel</button>
+    <button
+      mat-raised-button
+      [mat-dialog-close]="data"
+      color="primary"
+      [disabled]="f.invalid"
+    >
+      {{ data.action === 'add' ? 'Save' : 'Update' }}
+    </button>
+  </div>
+</form>

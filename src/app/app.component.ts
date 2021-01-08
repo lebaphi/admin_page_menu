@@ -14,7 +14,7 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'restaurant-menu'
   subject = new Subject<'add' | 'export'>()
   isAuth: boolean
-  menuName: string
+  menu: Menu
 
   private navSub: Subscription
   private categorySub: Subscription
@@ -34,7 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.isAuth = this.auth.isAuth()
     this.categorySub = this.uiService.categoryListChanged.subscribe(
       (menu: Menu) => {
-        this.menuName = menu.name
+        this.menu = menu
       }
     )
   }

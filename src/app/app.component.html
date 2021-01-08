@@ -9,8 +9,11 @@
     ></app-header>
     <main>
       <div class="instruction-group" [hidden]="!isAuth">
-        <div class="title">{{ menuName }}</div>
-        <div class="instruction">Some instructions here</div>
+        <mat-spinner *ngIf="!menu" [diameter]="30"></mat-spinner>
+        <div class="title" *ngIf="menu">
+          {{ menu.name }}
+        </div>
+        <div class="instruction" *ngIf="menu">{{ menu.description }}</div>
       </div>
       <div class="{{ isAuth ? 'outlet' : '' }}">
         <div class="group-action">

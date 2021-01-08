@@ -1,0 +1,38 @@
+<form fxLayout="column" #f="ngForm">
+  <mat-form-field>
+    <input
+      type="text"
+      matInput
+      placeholder="Menu name"
+      [(ngModel)]="data.name"
+      name="name"
+      required
+    />
+    <mat-error>Field must not be empty.</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input
+      type="text"
+      matInput
+      placeholder="Menu description"
+      [(ngModel)]="data.description"
+      name="description"
+      required
+    />
+    <mat-error>Field must not be empty.</mat-error>
+  </mat-form-field>
+
+  <div>
+    <button mat-raised-button (click)="closeDialog()">
+      Cancel
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="f.invalid"
+      [mat-dialog-close]="f.value"
+    >
+      Add
+    </button>
+  </div>
+</form>

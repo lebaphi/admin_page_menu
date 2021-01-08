@@ -31,10 +31,15 @@ button {
     font-style: italic;
     margin-top: 20px;
   }
+
+  mat-spinner {
+    margin-top: 10px;
+    margin-left: calc(50% - 15px);
+  }
 }
 
 .group-action {
-  // margin: 30px 0 10px 0;
+  margin: 30px 0 2px 0;
   text-align: center;
   display: flex;
   justify-content: flex-end;
