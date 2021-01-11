@@ -6,17 +6,13 @@ import { Category } from 'src/app/components/categories/categories.component'
   providedIn: 'root'
 })
 export class ObservableService {
-  public mainActions = new Subject<'add' | 'export'>()
+  public mainActions = new Subject<'add'>()
   public categoryItemAdded = new Subject<Category>()
 
   constructor() {}
 
   add(): void {
     this.mainActions.next('add')
-  }
-
-  export(): void {
-    this.mainActions.next('export')
   }
 
   addedCategory(category: Category): void {

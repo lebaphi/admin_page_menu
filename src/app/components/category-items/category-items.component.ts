@@ -17,6 +17,7 @@ export interface CategoryItem {
   item: string
   description: string
   price: string
+  order: number
 }
 
 @Component({
@@ -50,21 +51,24 @@ export class CategoryItemsComponent implements OnInit, OnDestroy {
       .snapshotChanges()
       .pipe(
         map(docArray => {
-          return docArray.map(doc => {
+          const arr = docArray.map(doc => {
             const {
               categoryId,
               item,
               description,
-              price
+              price,
+              order
             } = doc.payload.doc.data() as CategoryItem
             return {
               id: doc.payload.doc.id,
               categoryId,
               item,
               description,
-              price
+              price,
+              order
             }
           })
+          return arr.sort((a, b) => (a.order > b.order ? 1 : -1))
         })
       )
       .subscribe(
@@ -104,7 +108,13 @@ export class CategoryItemsComponent implements OnInit, OnDestroy {
 
   updatedItem(categoryItem: CategoryItem): void {
     const { id, item, description, price } = categoryItem
-    this.ref.doc(id).set({ item, description, price }, { merge: true })
+    this.ref.doc(id).update({ item, description, price })
+  }
+
+  updateOrder(): void {
+    this.dataSource.data.forEach(({ id, order }: CategoryItem) => {
+      this.ref.doc(id).update({ order })
+    })
   }
 
   ngOnDestroy(): void {

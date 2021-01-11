@@ -26,6 +26,7 @@ export type Menu = {
 export type Category = {
   id: string
   category: string
+  order: number
 }
 
 @Component({
@@ -58,6 +59,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     this.menuSub = this.fetchMenu().subscribe(
       (menus: Menu[]) => {
         this.uiService.menuListChanged.next(menus)
+        this.uiService.setMenus(menus)
         if (menus.length) {
           if (this.uiService.initialLoad) {
             this.uiService.initialLoaded()
@@ -127,13 +129,15 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     )
     return this.categoriesRef.snapshotChanges().pipe(
       map(docArray => {
-        return docArray.map(doc => {
-          const { category } = doc.payload.doc.data() as Category
+        const arr = docArray.map(doc => {
+          const { category, order } = doc.payload.doc.data() as Category
           return {
             id: doc.payload.doc.id,
-            category
+            category,
+            order
           }
         })
+        return arr.sort((a, b) => (a.order > b.order ? 1 : -1))
       })
     )
   }
@@ -154,8 +158,11 @@ export class CategoriesComponent implements OnInit, OnDestroy {
       categoryIds.push(category.id)
       this.menuRef
         .doc(id)
-        .set({ name, createdDate, uid, categoryIds }, { merge: true })
+        .update({ name, createdDate, uid, categoryIds })
         .then(() => {
+          const menu = this.uiService.selectedMenu
+          menu.categoryIds.push(category.id)
+          this.uiService.setSelectedMenu(menu)
           this.uiService.categoryListChanged.next(this.uiService.selectedMenu)
         })
     })
@@ -170,7 +177,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
         )
         this.menuRef
           .doc(this.uiService.selectedMenu.id)
-          .set({ categoryIds }, { merge: true })
+          .update({ categoryIds })
           .then(() => {
             this.uiService.selectedMenu.categoryIds = categoryIds
             this.categoriesRef.doc(item.id).delete()
@@ -180,9 +187,13 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   }
 
   updatedItem(item: Category): void {
-    this.categoriesRef
-      .doc(item.id)
-      .set({ category: item.category }, { merge: true })
+    this.categoriesRef.doc(item.id).update({ category: item.category })
+  }
+
+  updateOrder(): void {
+    this.dataSource.data.forEach(({ id, order }: Category) => {
+      this.categoriesRef.doc(id).update({ order })
+    })
   }
 
   ngOnDestroy(): void {

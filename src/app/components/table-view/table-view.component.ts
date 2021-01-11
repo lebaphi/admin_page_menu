@@ -33,6 +33,7 @@ export class TableViewComponent implements AfterViewInit, OnDestroy {
   @Output() addNewItem = new EventEmitter<any>()
   @Output() removeItem = new EventEmitter<any>()
   @Output() updateItem = new EventEmitter<any>()
+  @Output() dragDropItem = new EventEmitter<any>()
 
   routerLink: string
   cloneDataSource: string[]
@@ -88,9 +89,12 @@ export class TableViewComponent implements AfterViewInit, OnDestroy {
     const prevIndex = this.dataSource.data.findIndex(
       (d: any) => d === event.item.data
     )
-
     moveItemInArray(this.dataSource.data, prevIndex, event.currentIndex)
+    this.dataSource.data.forEach((item, index) => {
+      item.order = index
+    })
     this.renderTable()
+    this.dragDropItem.emit()
   }
 
   navigateTo(element: any): void {

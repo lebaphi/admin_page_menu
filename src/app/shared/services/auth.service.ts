@@ -90,6 +90,7 @@ export class AuthService {
 
   logout(): void {
     this.afauth.signOut()
+    this.cookiesService.deleteAll()
   }
 
   isAuth(): boolean {

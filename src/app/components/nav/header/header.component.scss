@@ -24,3 +24,10 @@ a:active {
 .menu-item {
   font-size: 12pt;
 }
+
+.delete-menu-btn {
+  border: none;
+  background: transparent;
+  color: rgb(178, 45, 48);
+  cursor: pointer;
+}

@@ -15,6 +15,7 @@ export interface Option {
   id: string
   option: string
   required: string
+  order: number
 }
 
 @Component({
@@ -51,14 +52,16 @@ export class OptionsComponent implements OnInit, OnDestroy {
       .snapshotChanges()
       .pipe(
         map(docArray => {
-          return docArray.map(doc => {
-            const { option, required } = doc.payload.doc.data() as Option
+          const arr = docArray.map(doc => {
+            const { option, required, order } = doc.payload.doc.data() as Option
             return {
               id: doc.payload.doc.id,
               option,
-              required
+              required,
+              order
             }
           })
+          return arr.sort((a, b) => (a.order > b.order ? 1 : -1))
         })
       )
       .subscribe(
@@ -98,7 +101,13 @@ export class OptionsComponent implements OnInit, OnDestroy {
 
   updatedItem(optionItem: Option): void {
     const { id, option, required } = optionItem
-    this.ref.doc(id).set({ option, required }, { merge: true })
+    this.ref.doc(id).update({ option, required })
+  }
+
+  updateOrder(): void {
+    this.dataSource.data.forEach(({ id, order }: Option) => {
+      this.ref.doc(id).update({ order })
+    })
   }
 
   ngOnDestroy(): void {

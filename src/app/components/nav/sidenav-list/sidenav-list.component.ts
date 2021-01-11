@@ -25,11 +25,9 @@ export class SidenavListComponent implements OnInit, OnDestroy {
 
   private menuListSub: Subscription
 
-  constructor(
-    private authService: AuthService,
-    private db: AngularFirestore,
-    private uiService: UIService
-  ) {}
+  constructor(private authService: AuthService, private uiService: UIService) {
+    this.menus = this.uiService.menus || []
+  }
 
   ngOnInit(): void {
     this.menuListSub = this.uiService.menuListChanged.subscribe(menus => {

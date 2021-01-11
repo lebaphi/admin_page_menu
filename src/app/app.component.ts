@@ -4,6 +4,7 @@ import { ObservableService } from './shared/services/observable.service'
 import { AuthService } from './shared/services/auth.service'
 import { UIService } from './shared/services/ui.service'
 import { Menu } from './components/categories/categories.component'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,7 @@ import { Menu } from './components/categories/categories.component'
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'restaurant-menu'
-  subject = new Subject<'add' | 'export'>()
+  subject = new Subject<'add'>()
   isAuth: boolean
   menu: Menu
 
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private uiService: UIService
   ) {
+    this.menu = this.uiService.selectedMenu
     this.navSub = this.auth.showNavSubject.subscribe(isAuthChanges => {
       this.isAuth = isAuthChanges
     })
@@ -57,8 +59,14 @@ export class AppComponent implements OnInit, OnDestroy {
     this.observable.add()
   }
 
-  export(): void {
-    this.observable.export()
+  preview(): void {
+    const uid = this.auth.getUser().uid
+    const menuName = this.uiService.selectedMenu.name
+    window.location.href = `https://preview.menu2orders.com?uid=${uid}&name=${menuName}`
+  }
+
+  edit(menu: Menu): void {
+    this.uiService.editMenu.next(menu)
   }
 
   ngOnDestroy(): void {

@@ -12,6 +12,9 @@
         <mat-spinner *ngIf="!menu" [diameter]="30"></mat-spinner>
         <div class="title" *ngIf="menu">
           {{ menu.name }}
+          <mat-icon class="edit-menu-btn" matTooltip="Edit" (click)="edit(menu)"
+            >edit</mat-icon
+          >
         </div>
         <div class="instruction" *ngIf="menu">{{ menu.description }}</div>
       </div>
@@ -21,9 +24,9 @@
             <mat-icon>add</mat-icon>
             <span>Add</span>
           </button>
-          <button mat-stroked-button (click)="export()" *ngIf="isAuth">
-            <mat-icon>cloud_download</mat-icon>
-            <span>Export</span>
+          <button mat-stroked-button (click)="preview()" *ngIf="isAuth">
+            <mat-icon>preview</mat-icon>
+            <span>Preview</span>
           </button>
         </div>
         <router-outlet></router-outlet>

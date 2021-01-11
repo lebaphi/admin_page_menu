@@ -10,10 +10,12 @@ import { MatDialog } from '@angular/material/dialog'
 import { Subscription } from 'rxjs'
 import { UIService } from 'src/app/shared/services/ui.service'
 import { ConfirmDialogComponent } from 'src/app/shared/modals/confirm-modal/confirm.modal'
+
 export interface ItemExtras {
   id: string
   extra: string
   price: string
+  order: number
 }
 
 @Component({
@@ -53,14 +55,16 @@ export class EditExtrasComponent implements OnInit, OnDestroy {
       .snapshotChanges()
       .pipe(
         map(docArray => {
-          return docArray.map(doc => {
-            const { extra, price } = doc.payload.doc.data() as ItemExtras
+          const arr = docArray.map(doc => {
+            const { extra, price, order } = doc.payload.doc.data() as ItemExtras
             return {
               id: doc.payload.doc.id,
               extra,
-              price
+              price,
+              order
             }
           })
+          return arr.sort((a, b) => (a.order > b.order ? 1 : -1))
         })
       )
       .subscribe(
@@ -94,7 +98,13 @@ export class EditExtrasComponent implements OnInit, OnDestroy {
 
   updatedItem(itemExtra: ItemExtras): void {
     const { id, extra, price } = itemExtra
-    this.ref.doc(id).set({ extra, price }, { merge: true })
+    this.ref.doc(id).update({ extra, price })
+  }
+
+  updateOrder(): void {
+    this.dataSource.data.forEach(({ id, order }: ItemExtras) => {
+      this.ref.doc(id).update({ order })
+    })
   }
 
   ngOnDestroy(): void {
