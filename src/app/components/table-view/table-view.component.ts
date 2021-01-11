@@ -13,8 +13,9 @@ import { Subscription } from 'rxjs'
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
-import { ObservableService } from 'src/app/shared/services/observable.service'
-import { DialogModalComponent } from 'src/app/shared/modals/dialog-modal/dialog-modal.component'
+
+import { ObservableService } from '../../shared/services/observable.service'
+import { DialogModalComponent } from '../../shared/modals/dialog-modal/dialog-modal.component'
 
 @Component({
   selector: 'app-table-view',

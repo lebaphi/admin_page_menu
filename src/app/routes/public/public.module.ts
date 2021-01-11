@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { FlexLayoutModule } from '@angular/flex-layout'
 
 import { MaterialModule } from '../../material.module'
 import { PublicRoutingModule } from './public-routing.module'
-import { FlexLayoutModule } from '@angular/flex-layout'
-import { LoginComponent } from 'src/app/components/auth/login/login.component'
+import { LoginComponent } from '../../components/auth/login/login.component'
 
 @NgModule({
   imports: [

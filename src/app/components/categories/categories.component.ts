@@ -8,11 +8,12 @@ import {
 import { map } from 'rxjs/operators'
 import { MatDialog } from '@angular/material/dialog'
 import { Subscription, Observable } from 'rxjs'
-import { UIService } from 'src/app/shared/services/ui.service'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
-import { AuthService } from 'src/app/shared/services/auth.service'
-import { ConfirmDialogComponent } from 'src/app/shared/modals/confirm-modal/confirm.modal'
+
+import { AuthService } from '../../shared/services/auth.service'
+import { ConfirmDialogComponent } from '../../shared/modals/confirm-modal/confirm.modal'
+import { UIService } from '../../shared/services/ui.service'
 
 export type Menu = {
   categoryIds: string[]

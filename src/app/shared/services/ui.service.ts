@@ -1,8 +1,8 @@
 import { Subject } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { MatSnackBar } from '@angular/material/snack-bar'
-import { Menu } from 'src/app/components/categories/categories.component'
 import { CookieService } from 'ngx-cookie-service'
+import { Menu } from '../../components/categories/categories.component'
 
 @Injectable()
 export class UIService {

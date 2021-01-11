@@ -5,14 +5,10 @@ import {
   EventEmitter,
   OnDestroy
 } from '@angular/core'
-import { AuthService } from 'src/app/shared/services/auth.service'
-import { Menu } from '../../categories/categories.component'
-import {
-  AngularFirestoreCollection,
-  AngularFirestore
-} from '@angular/fire/firestore'
-import { UIService } from 'src/app/shared/services/ui.service'
 import { Subscription } from 'rxjs'
+import { AuthService } from '../../../shared/services/auth.service'
+import { Menu } from '../../categories/categories.component'
+import { UIService } from '../../../shared/services/ui.service'
 
 @Component({
   selector: 'app-sidenav-list',

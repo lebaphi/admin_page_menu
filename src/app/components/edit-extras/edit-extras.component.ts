@@ -8,8 +8,9 @@ import {
 import { map } from 'rxjs/operators'
 import { MatDialog } from '@angular/material/dialog'
 import { Subscription } from 'rxjs'
-import { UIService } from 'src/app/shared/services/ui.service'
-import { ConfirmDialogComponent } from 'src/app/shared/modals/confirm-modal/confirm.modal'
+
+import { UIService } from '../../shared/services/ui.service'
+import { ConfirmDialogComponent } from '../../shared/modals/confirm-modal/confirm.modal'
 
 export interface ItemExtras {
   id: string

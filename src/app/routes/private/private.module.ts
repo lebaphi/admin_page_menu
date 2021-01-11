@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { DragDropModule } from '@angular/cdk/drag-drop'
+import { FlexLayoutModule } from '@angular/flex-layout'
 
 import { MaterialModule } from '../../material.module'
 import { PrivateRoutingModule } from './private-routing.module'
@@ -8,8 +10,6 @@ import { CategoriesComponent } from '../../components/categories/categories.comp
 import { TableViewComponent } from '../../components/table-view/table-view.component'
 import { EditExtrasComponent } from '../../components/edit-extras/edit-extras.component'
 import { OptionsComponent } from '../../components/options/options.component'
-import { DragDropModule } from '@angular/cdk/drag-drop'
-import { FlexLayoutModule } from '@angular/flex-layout'
 import { CategoryItemsComponent } from '../../components/category-items/category-items.component'
 import { DialogModalComponent } from '../../shared/modals/dialog-modal/dialog-modal.component'
 import { ConfirmDialogComponent } from '../../shared/modals/confirm-modal/confirm.modal'

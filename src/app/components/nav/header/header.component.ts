@@ -5,17 +5,17 @@ import {
   EventEmitter,
   OnDestroy
 } from '@angular/core'
-import { AuthService } from 'src/app/shared/services/auth.service'
-import { UIService } from 'src/app/shared/services/ui.service'
-import { Menu } from '../../categories/categories.component'
+import { Router } from '@angular/router'
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
 import { Subscription } from 'rxjs'
 import { AngularFirestore } from '@angular/fire/firestore'
 import { AngularFirestoreCollection } from '@angular/fire/firestore'
-import { MenuDialogComponent } from 'src/app/shared/modals/new-menu-modal/new-menu.component'
-import { Router } from '@angular/router'
-import { ConfirmDialogComponent } from 'src/app/shared/modals/confirm-modal/confirm.modal'
-import { MatSnackBar } from '@angular/material/snack-bar'
+
+import { MenuDialogComponent } from '../../../shared/modals/new-menu-modal/new-menu.component'
+import { ConfirmDialogComponent } from '../../../shared/modals/confirm-modal/confirm.modal'
+import { AuthService } from '../../../shared/services/auth.service'
+import { UIService } from '../../../shared/services/ui.service'
+import { Menu } from '../../categories/categories.component'
 
 @Component({
   selector: 'app-header',

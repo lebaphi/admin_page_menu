@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core'
 import { Routes, RouterModule } from '@angular/router'
-import { CategoriesComponent } from 'src/app/components/categories/categories.component'
-import { CategoryItemsComponent } from 'src/app/components/category-items/category-items.component'
-import { OptionsComponent } from 'src/app/components/options/options.component'
-import { EditExtrasComponent } from 'src/app/components/edit-extras/edit-extras.component'
+
+import { CategoriesComponent } from '../../components/categories/categories.component'
+import { CategoryItemsComponent } from '../../components/category-items/category-items.component'
+import { OptionsComponent } from '../../components/options/options.component'
+import { EditExtrasComponent } from '../../components/edit-extras/edit-extras.component'
 
 const routes: Routes = [
   {

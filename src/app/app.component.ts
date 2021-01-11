@@ -4,7 +4,6 @@ import { ObservableService } from './shared/services/observable.service'
 import { AuthService } from './shared/services/auth.service'
 import { UIService } from './shared/services/ui.service'
 import { Menu } from './components/categories/categories.component'
-import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-root',
