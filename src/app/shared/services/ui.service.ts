@@ -22,7 +22,7 @@ export class UIService {
   }
 
   get initialLoad(): boolean {
-    return !JSON.stringify(this.cookieService.get('initialLoad'))
+    return !!JSON.stringify(this.cookieService.get('initialLoad') || false)
   }
 
   initialLoaded(): void {
@@ -34,7 +34,7 @@ export class UIService {
   }
 
   get menus(): Menu[] {
-    return JSON.parse(this.cookieService.get('menus'))
+    return JSON.parse(this.cookieService.get('menus') || null)
   }
 
   setSelectedMenu(menu: Menu): void {
@@ -42,6 +42,6 @@ export class UIService {
   }
 
   get selectedMenu(): Menu {
-    return JSON.parse(this.cookieService.get('selectedMenu'))
+    return JSON.parse(this.cookieService.get('selectedMenu') || null)
   }
 }

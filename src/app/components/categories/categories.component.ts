@@ -61,7 +61,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
         this.uiService.menuListChanged.next(menus)
         this.uiService.setMenus(menus)
         if (menus.length) {
-          if (this.uiService.initialLoad) {
+          if (!this.uiService.initialLoad) {
             this.uiService.initialLoaded()
             this.uiService.setSelectedMenu(menus[0])
           }
@@ -163,7 +163,6 @@ export class CategoriesComponent implements OnInit, OnDestroy {
           const menu = this.uiService.selectedMenu
           menu.categoryIds.push(category.id)
           this.uiService.setSelectedMenu(menu)
-          this.uiService.categoryListChanged.next(this.uiService.selectedMenu)
         })
     })
   }
