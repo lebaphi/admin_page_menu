@@ -9,15 +9,20 @@
           <span>New menu</span>
         </button>
         <mat-divider></mat-divider>
-        <button
-          mat-menu-item
-          class="menu-item"
-          *ngFor="let menu of menus"
-          (click)="selectMenu(menu)"
-        >
-          <mat-icon>menu</mat-icon>
-          <span>{{ menu.name }}</span>
-        </button>
+        <div *ngFor="let menu of menus" fxFlex fxLayout="row">
+          <button mat-menu-item class="menu-item" (click)="selectMenu(menu)">
+            <mat-icon>menu</mat-icon>
+            <span>{{ menu.name }}</span>
+          </button>
+          <button
+            align="end"
+            class="delete-menu-btn"
+            matTooltip="Delete {{ menu.name }}"
+            (click)="deleteMenu(menu)"
+          >
+            <mat-icon>delete_forever</mat-icon>
+          </button>
+        </div>
       </mat-menu>
     </button>
   </mat-list-item>

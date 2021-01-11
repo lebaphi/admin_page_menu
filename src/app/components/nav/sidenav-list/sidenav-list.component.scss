@@ -7,3 +7,10 @@ a:hover,
 a:active {
   color: lightgray;
 }
+
+.delete-menu-btn {
+  border: none;
+  background: transparent;
+  color: rgb(178, 45, 48);
+  cursor: pointer;
+}

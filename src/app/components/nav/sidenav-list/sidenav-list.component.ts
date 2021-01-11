@@ -49,6 +49,10 @@ export class SidenavListComponent implements OnInit, OnDestroy {
     this.onClose()
   }
 
+  deleteMenu(menu: Menu): void {
+    this.uiService.deleteMenu.next(menu)
+  }
+
   onLogout(): void {
     this.authService.logout()
   }

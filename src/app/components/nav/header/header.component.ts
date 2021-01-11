@@ -30,6 +30,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private menuListSub: Subscription
   private addNewMenuSub: Subscription
   private editMenuSub: Subscription
+  private deleteMenuSub: Subscription
   private ref: AngularFirestoreCollection
 
   constructor(
@@ -52,6 +53,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     })
     this.editMenuSub = this.uiService.editMenu.subscribe((menu: Menu) => {
       this.editMenu(menu)
+    })
+    this.deleteMenuSub = this.uiService.deleteMenu.subscribe((menu: Menu) => {
+      this.deleteMenu(menu)
     })
   }
 
@@ -158,6 +162,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     if (this.editMenuSub) {
       this.editMenuSub.unsubscribe()
+    }
+    if (this.deleteMenuSub) {
+      this.deleteMenuSub.unsubscribe()
     }
   }
 }

@@ -11,6 +11,7 @@ export class UIService {
   categoryListChanged = new Subject<Menu>()
   addNewMenuEvent = new Subject<void>()
   editMenu = new Subject<Menu>()
+  deleteMenu = new Subject<Menu>()
 
   constructor(
     private snackbar: MatSnackBar,

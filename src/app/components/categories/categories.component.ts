@@ -39,7 +39,6 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   columnWidth = `${100 / this.displayedColumns.length}%`
   dataSource = new MatTableDataSource<Category>()
 
-  private selectedMenu: Menu
   private menuRef: AngularFirestoreCollection
   private categoriesRef: AngularFirestoreCollection
   private menuSub: Subscription
