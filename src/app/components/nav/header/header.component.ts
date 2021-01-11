@@ -98,16 +98,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     const menuRef = this.dialog.open(MenuDialogComponent, config)
     menuRef.afterClosed().subscribe(result => {
-      const { name, description } = result
-      this.ref
-        .doc(menu.id)
-        .update({ name, description })
-        .then(() => {
-          menu.name = name
-          menu.description = description
-          this.selectMenu({ id: menu.id, ...menu })
-          this.uiService.showSnackBar('Update menu success', null, 3000)
-        })
+      if (result) {
+        const { name, description } = result
+        this.ref
+          .doc(menu.id)
+          .update({ name, description })
+          .then(() => {
+            menu.name = name
+            menu.description = description
+            this.selectMenu({ id: menu.id, ...menu })
+            this.uiService.showSnackBar('Update menu success', null, 3000)
+          })
+      }
     })
   }
   selectMenu(menu: Menu): void {
