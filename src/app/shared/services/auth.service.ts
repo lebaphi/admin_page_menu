@@ -6,12 +6,14 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import { CookieService } from 'ngx-cookie-service'
 import { UIService } from './ui.service'
+import { environment } from '../../../environments/environment'
 
 export type User = {
   uid: string
   displayName: string
   email: string
   photoURL: string
+  isAdmin: boolean
 }
 
 export interface AuthData {
@@ -38,12 +40,11 @@ export class AuthService {
     this.afauth.authState.subscribe(user => {
       this.uiService.loadingStateChanged.next(false)
       if (user) {
-        this.cookiesService.set(
-          'authData',
-          JSON.stringify(user.providerData[0]),
-          1,
-          '/'
-        )
+        const { uid, email, displayName, photoURL } = user
+        const isAdmin = uid === environment.theEdior.uid
+        const localUser: User = { uid, email, displayName, photoURL, isAdmin }
+
+        this.cookiesService.set('authData', JSON.stringify(localUser), 1, '/')
         this.showNavSubject.next(true)
         if (this.router.url === '/login') {
           this.router.navigate(['/categories'])
@@ -90,7 +91,6 @@ export class AuthService {
 
   logout(): void {
     this.afauth.signOut()
-    this.cookiesService.deleteAll('/')
   }
 
   isAuth(): boolean {

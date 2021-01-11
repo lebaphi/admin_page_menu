@@ -47,7 +47,8 @@ export class AppComponent implements OnInit, OnDestroy {
             uid: null,
             categoryIds: [],
             id: null,
-            createdDate: null
+            createdDate: null,
+            author: ''
           }
         }
       }

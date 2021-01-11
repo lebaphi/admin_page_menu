@@ -7,7 +7,39 @@
   <div><a routerLink="/">Logo</a></div>
   <div fxFlex fxLayout fxLayoutAlign="end end" fxHide.xs>
     <ul fxLayout fxLayoutGap="15px" class="navigation-items">
-      <li>
+      <li *ngIf="isAdmin">
+        <a mat-raised-button color="primary" [matMenuTriggerFor]="rootMenu">
+          Users
+          <mat-icon>expand_more</mat-icon>
+        </a>
+        <mat-menu #rootMenu="matMenu">
+          <ng-container *ngFor="let item of menuList">
+            <div *ngIf="item.children.length > 0">
+              <button mat-menu-item [matMenuTriggerFor]="subMenu">
+                {{ item.user }}
+              </button>
+            </div>
+            <div *ngIf="!item.children.length">
+              <button mat-menu-item>{{ item.user }}</button>
+            </div>
+
+            <mat-menu #subMenu="matMenu">
+              <button mat-menu-item class="menu-item" (click)="newMenu()">
+                <mat-icon>add</mat-icon>
+                <span>New menu</span>
+              </button>
+              <mat-divider></mat-divider>
+              <ng-container *ngFor="let menu of item.children">
+                <button mat-menu-item (click)="selectMenu(menu)">
+                  <mat-icon>menu</mat-icon>
+                  {{ menu.name }}
+                </button>
+              </ng-container>
+            </mat-menu>
+          </ng-container>
+        </mat-menu>
+      </li>
+      <li *ngIf="!isAdmin">
         <a [matMenuTriggerFor]="menu">Menu</a>
         <mat-menu #menu="matMenu">
           <button mat-menu-item class="menu-item" (click)="newMenu()">

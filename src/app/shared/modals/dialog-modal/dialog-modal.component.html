@@ -10,7 +10,7 @@
         [(ngModel)]="data[key]"
         name="{{ key }}"
         placeholder="{{ key }}"
-        required
+        required="{{ key === 'description' ? false : true }}"
       />
       <mat-error>Field must not be empty.</mat-error>
     </mat-form-field>

@@ -20,6 +20,7 @@ export type Menu = {
   createdDate: Date
   name: string
   uid: string
+  author: string
   id: string
   description?: string
 }
@@ -68,7 +69,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
           this.uiService.categoryListChanged.next(this.uiService.selectedMenu)
         }
       },
-      err => this.showError('Fetching menu failed, please try again later')
+      err => this.uiService.loadingStateChanged.next(false)
     )
 
     this.categoryChangeSub = this.uiService.categoryListChanged.subscribe(
@@ -78,23 +79,17 @@ export class CategoriesComponent implements OnInit, OnDestroy {
           (categories: Category[]) => {
             this.dataSource.data = categories
           },
-          err =>
-            this.showError('Fetching category failed, please try again later')
+          err => this.uiService.loadingStateChanged.next(false)
         )
       }
     )
   }
 
-  showError(msg: string): void {
-    this.uiService.loadingStateChanged.next(false)
-    this.uiService.showSnackBar(msg, null, 3000)
-  }
-
   fetchMenu(): Observable<Menu[]> {
     const authData = this.authService.getUser()
-    this.menuRef = this.db.collection('menus', ref =>
-      ref.where('uid', '==', authData.uid)
-    )
+    this.menuRef = authData.isAdmin
+      ? this.db.collection('menus')
+      : this.db.collection('menus', ref => ref.where('uid', '==', authData.uid))
     return this.menuRef.snapshotChanges().pipe(
       map(docArray => {
         if (!docArray.length) {
@@ -106,7 +101,8 @@ export class CategoriesComponent implements OnInit, OnDestroy {
             name,
             createdDate,
             uid,
-            description
+            description,
+            author
           } = doc.payload.doc.data() as Menu
           return {
             id: doc.payload.doc.id,
@@ -114,7 +110,8 @@ export class CategoriesComponent implements OnInit, OnDestroy {
             name,
             createdDate,
             uid,
-            description
+            description,
+            author
           }
         })
         return mappedMenus.sort((a, b) => (a.name > b.name ? 1 : -1))

@@ -17,6 +17,12 @@ import { AuthService } from '../../../shared/services/auth.service'
 import { UIService } from '../../../shared/services/ui.service'
 import { Menu } from '../../categories/categories.component'
 
+export interface MenuList {
+  user: string
+  uid: string
+  children: Menu[]
+}
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -25,12 +31,15 @@ import { Menu } from '../../categories/categories.component'
 export class HeaderComponent implements OnInit, OnDestroy {
   @Output() sidenavToggle = new EventEmitter<void>()
   menus: Menu[]
+  isAdmin: boolean
+  menuList: MenuList[]
 
   private dialogSubs: Subscription[] = []
   private menuListSub: Subscription
   private addNewMenuSub: Subscription
   private editMenuSub: Subscription
   private deleteMenuSub: Subscription
+
   private ref: AngularFirestoreCollection
 
   constructor(
@@ -41,12 +50,30 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private router: Router
   ) {
     this.menus = this.uiService.menus || []
+    this.isAdmin =
+      this.authService.getUser() && this.authService.getUser().isAdmin
     this.ref = this.db.collection('menus')
   }
 
   ngOnInit(): void {
     this.menuListSub = this.uiService.menuListChanged.subscribe(menus => {
       this.menus = menus
+      this.menuList = []
+      const added = (uid: string): boolean => {
+        return this.menuList.some(menu => menu.uid === uid)
+      }
+      this.menus.forEach((menu: Menu) => {
+        if (!added(menu.uid)) {
+          this.menuList.push({
+            user: menu.author,
+            uid: menu.uid,
+            children: [menu]
+          })
+        } else {
+          const menuItem = this.menuList.find(m => m.uid === menu.uid)
+          menuItem.children.push(menu)
+        }
+      })
     })
     this.addNewMenuSub = this.uiService.addNewMenuEvent.subscribe(() => {
       this.newMenu()
@@ -78,6 +105,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
           name: result.name,
           createdDate: new Date(),
           uid: this.authService.getUser().uid,
+          author: this.authService.getUser().email,
           categoryIds: [],
           description: result.description
         }
@@ -112,6 +140,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     })
   }
+
   selectMenu(menu: Menu): void {
     this.uiService.setSelectedMenu(menu)
     if (this.router.url === '/categories') {
@@ -139,7 +168,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
                   uid: null,
                   categoryIds: [],
                   id: null,
-                  createdDate: null
+                  createdDate: null,
+                  author: ''
                 })
               }
             })
