@@ -23,7 +23,10 @@ export class UIService {
   }
 
   get initialLoad(): boolean {
-    return !!JSON.stringify(this.cookieService.get('initialLoad') || false)
+    if (this.cookieService.get('initialLoad')) {
+      return !!JSON.stringify(this.cookieService.get('initialLoad'))
+    }
+    return false
   }
 
   initialLoaded(): void {
