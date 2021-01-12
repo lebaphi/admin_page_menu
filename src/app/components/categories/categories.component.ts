@@ -113,7 +113,8 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   }
 
   fetchCategory(categoryIds: string[]): Observable<Category[]> {
-    const filteredId = categoryIds.length === 0 ? ['empty_id'] : categoryIds
+    const filteredId =
+      !categoryIds || categoryIds.length === 0 ? ['empty_id'] : categoryIds
     this.categoriesRef = this.db.collection('categories', ref =>
       ref.where(firebase.firestore.FieldPath.documentId(), 'in', filteredId)
     )

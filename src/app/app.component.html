@@ -16,7 +16,11 @@
         <mat-spinner *ngIf="!menu" [diameter]="30"></mat-spinner>
         <div class="title" *ngIf="menu">
           {{ menu.name }}
-          <mat-icon class="edit-menu-btn" matTooltip="Edit" (click)="edit(menu)"
+          <mat-icon
+            *ngIf="!menu.isNew"
+            class="edit-menu-btn"
+            matTooltip="Edit"
+            (click)="edit(menu)"
             >edit</mat-icon
           >
         </div>

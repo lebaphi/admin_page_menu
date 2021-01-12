@@ -41,20 +41,24 @@ export class AppComponent implements OnInit, OnDestroy {
     this.isAuth = this.auth.isAuth()
     this.categorySub = this.uiService.categoryListChanged.subscribe(
       (menu: Menu) => {
-        this.menu = menu
+        if (!menu.isNew) {
+          this.menu = menu
+        }
       }
     )
     this.menuListChanged = this.uiService.menuListChanged.subscribe(
       (menus: Menu[]) => {
-        if (!menus.length) {
+        if (!menus.length || this.isAdmin) {
           this.menu = {
-            name: `Please create your first menu`,
+            name: this.isAdmin
+              ? `Please select user's menu to edit`
+              : 'Please create your first menu',
             uid: null,
             categoryIds: [],
             id: null,
             createdDate: null,
             author: '',
-            isNew: false
+            isNew: true
           }
         }
       }
