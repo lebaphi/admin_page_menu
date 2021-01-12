@@ -19,6 +19,7 @@ import { Menu, MenuList } from '../../../shared/models'
 export class SidenavListComponent implements OnInit, OnDestroy {
   @Input() isAdmin: boolean
   @Output() closeSidenav = new EventEmitter<void>()
+
   menus: Menu[]
   menuList: MenuList[] = []
 
@@ -44,8 +45,8 @@ export class SidenavListComponent implements OnInit, OnDestroy {
     this.closeSidenav.emit()
   }
 
-  newMenu(): void {
-    this.uiService.addNewMenuEvent.next()
+  newMenu(data?: MenuList): void {
+    this.uiService.addNewMenuEvent.next(data)
     this.onClose()
   }
 

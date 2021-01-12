@@ -10,7 +10,7 @@ export class UIService {
   loadingStateChanged = new Subject<boolean>()
   menuListChanged = new Subject<Menu[]>()
   categoryListChanged = new Subject<Menu>()
-  addNewMenuEvent = new Subject<void>()
+  addNewMenuEvent = new Subject<MenuList>()
   editMenu = new Subject<Menu>()
   deleteMenu = new Subject<Menu>()
   adminMenuList = new Subject<MenuList[]>()

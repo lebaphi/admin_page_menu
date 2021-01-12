@@ -76,11 +76,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
           menuItem.children.push(menu)
         }
       })
+      this.menuList.forEach((menuList: MenuList) => {
+        menuList.children.sort((a, b) => (a.name > b.name ? 1 : -1))
+      })
       this.uiService.adminMenuList.next(this.menuList)
     })
-    this.addNewMenuSub = this.uiService.addNewMenuEvent.subscribe(() => {
-      this.newMenu()
-    })
+    this.addNewMenuSub = this.uiService.addNewMenuEvent.subscribe(
+      (menuList: MenuList) => {
+        this.newMenu(menuList)
+      }
+    )
     this.editMenuSub = this.uiService.editMenu.subscribe((menu: Menu) => {
       this.editMenu(menu)
     })
@@ -95,7 +100,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   newMenu(data?: MenuList): void {
     const config: MatDialogConfig = {
-      width: '50%',
+      width: '60%',
       data: {
         name: '',
         description: ''
@@ -131,7 +136,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   editMenu(menu: Menu): void {
     const config: MatDialogConfig = {
-      width: '50%',
+      width: '60%',
       data: {
         name: menu.name,
         description: menu.description
