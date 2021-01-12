@@ -127,7 +127,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
             .doc(data.id)
             .update(newMenu)
             .then(() => {
-              this.uiService.showSnackBar('Updated success', null, 3000)
+              this.uiService.showSnackBar('Updated successfully', null, 3000)
             })
         }
       }
@@ -153,7 +153,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
             menu.name = name
             menu.description = description
             this.selectMenu({ id: menu.id, ...menu })
-            this.uiService.showSnackBar('Update menu success', null, 3000)
+            this.uiService.showSnackBar('Update successfully', null, 3000)
           })
       }
     })
@@ -191,6 +191,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
                   isNew: true
                 })
               }
+              this.uiService.showSnackBar('Deleted successfully', null, 3000)
             })
         }
       })

@@ -25,10 +25,20 @@
               </button>
               <mat-divider></mat-divider>
               <ng-container *ngFor="let menu of item.children">
-                <button mat-menu-item (click)="selectMenu(menu)">
-                  <mat-icon>menu</mat-icon>
-                  {{ menu.name }}
-                </button>
+                <div fxFlex fxLayout="row">
+                  <button mat-menu-item (click)="selectMenu(menu)">
+                    <mat-icon>menu</mat-icon>
+                    {{ menu.name }}
+                  </button>
+                  <button
+                    align="end"
+                    class="delete-menu-btn"
+                    matTooltip="Delete {{ menu.name }}"
+                    (click)="deleteMenu(menu)"
+                  >
+                    <mat-icon>delete_forever</mat-icon>
+                  </button>
+                </div>
               </ng-container>
             </mat-menu>
           </ng-container>
