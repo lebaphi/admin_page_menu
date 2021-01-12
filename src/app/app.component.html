@@ -1,11 +1,15 @@
 <mat-sidenav-container>
   <mat-sidenav #sidenav role="navigation" [hidden]="!isAuth">
-    <app-sidenav-list (closeSidenav)="sidenav.close()"></app-sidenav-list>
+    <app-sidenav-list
+      (closeSidenav)="sidenav.close()"
+      [isAdmin]="isAdmin"
+    ></app-sidenav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <app-header
       (sidenavToggle)="sidenav.toggle()"
       [hidden]="!isAuth"
+      [isAdmin]="isAdmin"
     ></app-header>
     <main>
       <div class="instruction-group" [hidden]="!isAuth">

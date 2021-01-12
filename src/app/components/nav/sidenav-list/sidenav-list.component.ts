@@ -3,12 +3,13 @@ import {
   OnInit,
   Output,
   EventEmitter,
-  OnDestroy
+  OnDestroy,
+  Input
 } from '@angular/core'
 import { Subscription } from 'rxjs'
 import { AuthService } from '../../../shared/services/auth.service'
-import { Menu } from '../../categories/categories.component'
 import { UIService } from '../../../shared/services/ui.service'
+import { Menu, MenuList } from '../../../shared/models'
 
 @Component({
   selector: 'app-sidenav-list',
@@ -16,10 +17,13 @@ import { UIService } from '../../../shared/services/ui.service'
   styleUrls: ['./sidenav-list.component.scss']
 })
 export class SidenavListComponent implements OnInit, OnDestroy {
+  @Input() isAdmin: boolean
   @Output() closeSidenav = new EventEmitter<void>()
   menus: Menu[]
+  menuList: MenuList[] = []
 
   private menuListSub: Subscription
+  private adminMenuListSub: Subscription
 
   constructor(private authService: AuthService, private uiService: UIService) {
     this.menus = this.uiService.menus || []
@@ -29,6 +33,11 @@ export class SidenavListComponent implements OnInit, OnDestroy {
     this.menuListSub = this.uiService.menuListChanged.subscribe(menus => {
       this.menus = menus
     })
+    this.adminMenuListSub = this.uiService.adminMenuList.subscribe(
+      (menuList: MenuList[]) => {
+        this.menuList = menuList
+      }
+    )
   }
 
   onClose(): void {
@@ -56,6 +65,9 @@ export class SidenavListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.menuListSub) {
       this.menuListSub.unsubscribe()
+    }
+    if (this.adminMenuListSub) {
+      this.adminMenuListSub.unsubscribe()
     }
   }
 }

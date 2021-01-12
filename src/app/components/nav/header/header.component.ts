@@ -3,7 +3,8 @@ import {
   OnInit,
   Output,
   EventEmitter,
-  OnDestroy
+  OnDestroy,
+  Input
 } from '@angular/core'
 import { Router } from '@angular/router'
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
@@ -15,13 +16,7 @@ import { MenuDialogComponent } from '../../../shared/modals/new-menu-modal/new-m
 import { ConfirmDialogComponent } from '../../../shared/modals/confirm-modal/confirm.modal'
 import { AuthService } from '../../../shared/services/auth.service'
 import { UIService } from '../../../shared/services/ui.service'
-import { Menu } from '../../categories/categories.component'
-
-export interface MenuList {
-  user: string
-  uid: string
-  children: Menu[]
-}
+import { Menu, MenuList } from '../../../shared/models'
 
 @Component({
   selector: 'app-header',
@@ -29,9 +24,9 @@ export interface MenuList {
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+  @Input() isAdmin: boolean
   @Output() sidenavToggle = new EventEmitter<void>()
   menus: Menu[]
-  isAdmin: boolean
   menuList: MenuList[]
 
   private dialogSubs: Subscription[] = []
@@ -50,9 +45,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private router: Router
   ) {
     this.menus = this.uiService.menus || []
-    this.isAdmin =
-      this.authService.getUser() && this.authService.getUser().isAdmin
-    this.ref = this.db.collection('menus')
+    const user = this.authService.getUser()
+    if (user) {
+      this.ref = this.isAdmin
+        ? this.db.collection('menus')
+        : this.db.collection('menus', ref =>
+            ref.where('isNew', '==', 'false').where('uid', '==', user.uid)
+          )
+    }
   }
 
   ngOnInit(): void {
@@ -67,13 +67,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.menuList.push({
             user: menu.author,
             uid: menu.uid,
-            children: [menu]
+            children: menu.isNew ? [] : [menu],
+            id: menu.id,
+            isNew: menu.isNew
           })
         } else {
           const menuItem = this.menuList.find(m => m.uid === menu.uid)
           menuItem.children.push(menu)
         }
       })
+      this.uiService.adminMenuList.next(this.menuList)
     })
     this.addNewMenuSub = this.uiService.addNewMenuEvent.subscribe(() => {
       this.newMenu()
@@ -90,7 +93,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.sidenavToggle.emit()
   }
 
-  newMenu(): void {
+  newMenu(data?: MenuList): void {
     const config: MatDialogConfig = {
       width: '50%',
       data: {
@@ -104,14 +107,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
         const newMenu = {
           name: result.name,
           createdDate: new Date(),
-          uid: this.authService.getUser().uid,
-          author: this.authService.getUser().email,
+          uid: data ? data.uid : this.authService.getUser().uid,
+          author: data ? data.user : this.authService.getUser().email,
           categoryIds: [],
-          description: result.description
+          description: result.description,
+          isNew: false
         }
-        this.ref.add(newMenu).then(({ id }) => {
-          this.selectMenu({ id, ...newMenu })
-        })
+        if (!data || !data.isNew) {
+          this.ref.add(newMenu).then(({ id }) => {
+            this.selectMenu({ id, ...newMenu })
+          })
+        } else {
+          this.ref
+            .doc(data.id)
+            .update(newMenu)
+            .then(() => {
+              this.uiService.showSnackBar('Updated success', null, 3000)
+            })
+        }
       }
     })
   }
@@ -169,7 +182,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
                   categoryIds: [],
                   id: null,
                   createdDate: null,
-                  author: ''
+                  author: '',
+                  isNew: true
                 })
               }
             })

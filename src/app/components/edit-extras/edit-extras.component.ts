@@ -11,13 +11,7 @@ import { Subscription } from 'rxjs'
 
 import { UIService } from '../../shared/services/ui.service'
 import { ConfirmDialogComponent } from '../../shared/modals/confirm-modal/confirm.modal'
-
-export interface ItemExtras {
-  id: string
-  extra: string
-  price: string
-  order: number
-}
+import { ItemExtras } from '../../shared/models'
 
 @Component({
   selector: 'app-edit-extras',

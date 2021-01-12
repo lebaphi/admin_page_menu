@@ -11,15 +11,7 @@ import { Subscription } from 'rxjs'
 
 import { UIService } from '../../shared/services/ui.service'
 import { ConfirmDialogComponent } from '../../shared/modals/confirm-modal/confirm.modal'
-
-export interface CategoryItem {
-  id: string
-  categoryId: string
-  item: string
-  description: string
-  price: string
-  order: number
-}
+import { CategoryItem } from '../../shared/models'
 
 @Component({
   selector: 'app-category-items',

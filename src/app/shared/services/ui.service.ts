@@ -2,7 +2,8 @@ import { Subject } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { CookieService } from 'ngx-cookie-service'
-import { Menu } from '../../components/categories/categories.component'
+import { Menu, MenuList } from '../models'
+import { APP_PATH } from '../const'
 
 @Injectable()
 export class UIService {
@@ -12,10 +13,11 @@ export class UIService {
   addNewMenuEvent = new Subject<void>()
   editMenu = new Subject<Menu>()
   deleteMenu = new Subject<Menu>()
+  adminMenuList = new Subject<MenuList[]>()
 
   constructor(
     private snackbar: MatSnackBar,
-    private cookieService: CookieService
+    private cookiesService: CookieService
   ) {}
 
   showSnackBar(message: string, action: string, duration: number): void {
@@ -23,29 +25,29 @@ export class UIService {
   }
 
   get initialLoad(): boolean {
-    if (this.cookieService.get('initialLoad')) {
-      return !!JSON.stringify(this.cookieService.get('initialLoad'))
+    if (this.cookiesService.get('initialLoad')) {
+      return !!JSON.stringify(this.cookiesService.get('initialLoad'))
     }
     return false
   }
 
   initialLoaded(): void {
-    this.cookieService.set('initialLoad', 'true', 1, '/')
+    this.cookiesService.set('initialLoad', 'true', 1, APP_PATH)
   }
 
   setMenus(menus: Menu[]): void {
-    this.cookieService.set('menus', JSON.stringify(menus), 1, '/')
+    this.cookiesService.set('menus', JSON.stringify(menus), 1, APP_PATH)
   }
 
   get menus(): Menu[] {
-    return JSON.parse(this.cookieService.get('menus') || null)
+    return JSON.parse(this.cookiesService.get('menus') || null)
   }
 
   setSelectedMenu(menu: Menu): void {
-    this.cookieService.set('selectedMenu', JSON.stringify(menu), 1, '/')
+    this.cookiesService.set('selectedMenu', JSON.stringify(menu), 1, APP_PATH)
   }
 
   get selectedMenu(): Menu {
-    return JSON.parse(this.cookieService.get('selectedMenu') || null)
+    return JSON.parse(this.cookiesService.get('selectedMenu') || null)
   }
 }

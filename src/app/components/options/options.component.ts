@@ -11,13 +11,7 @@ import { Subscription } from 'rxjs'
 
 import { UIService } from '../../shared/services/ui.service'
 import { ConfirmDialogComponent } from '../../shared/modals/confirm-modal/confirm.modal'
-
-export interface Option {
-  id: string
-  option: string
-  required: string
-  order: number
-}
+import { Option } from '../../shared/models'
 
 @Component({
   selector: 'app-options',

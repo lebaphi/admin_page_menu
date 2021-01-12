@@ -14,17 +14,12 @@
         </a>
         <mat-menu #rootMenu="matMenu">
           <ng-container *ngFor="let item of menuList">
-            <div *ngIf="item.children.length > 0">
-              <button mat-menu-item [matMenuTriggerFor]="subMenu">
-                {{ item.user }}
-              </button>
-            </div>
-            <div *ngIf="!item.children.length">
-              <button mat-menu-item>{{ item.user }}</button>
-            </div>
+            <button mat-menu-item [matMenuTriggerFor]="subMenu">
+              {{ item.user }}
+            </button>
 
             <mat-menu #subMenu="matMenu">
-              <button mat-menu-item class="menu-item" (click)="newMenu()">
+              <button mat-menu-item class="menu-item" (click)="newMenu(item)">
                 <mat-icon>add</mat-icon>
                 <span>New menu</span>
               </button>

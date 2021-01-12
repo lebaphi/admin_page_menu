@@ -1,5 +1,32 @@
 <mat-nav-list>
-  <mat-list-item [matMenuTriggerFor]="menu">
+  <mat-list-item *ngIf="isAdmin">
+    <a mat-raised-button color="primary" [matMenuTriggerFor]="rootMenu">
+      Users
+      <mat-icon>expand_more</mat-icon>
+    </a>
+    <mat-menu #rootMenu="matMenu">
+      <ng-container *ngFor="let item of menuList">
+        <button mat-menu-item [matMenuTriggerFor]="subMenu">
+          {{ item.user }}
+        </button>
+
+        <mat-menu #subMenu="matMenu">
+          <button mat-menu-item class="menu-item" (click)="newMenu(item)">
+            <mat-icon>add</mat-icon>
+            <span>New menu</span>
+          </button>
+          <mat-divider></mat-divider>
+          <ng-container *ngFor="let menu of item.children">
+            <button mat-menu-item (click)="selectMenu(menu)">
+              <mat-icon>menu</mat-icon>
+              {{ menu.name }}
+            </button>
+          </ng-container>
+        </mat-menu>
+      </ng-container>
+    </mat-menu>
+  </mat-list-item>
+  <mat-list-item *ngIf="!isAdmin" [matMenuTriggerFor]="menu">
     <button mat-icon-button>
       <mat-icon>list</mat-icon>
       <a>Menu</a>

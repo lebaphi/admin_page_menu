@@ -14,22 +14,7 @@ import 'firebase/firestore'
 import { AuthService } from '../../shared/services/auth.service'
 import { ConfirmDialogComponent } from '../../shared/modals/confirm-modal/confirm.modal'
 import { UIService } from '../../shared/services/ui.service'
-
-export type Menu = {
-  categoryIds: string[]
-  createdDate: Date
-  name: string
-  uid: string
-  author: string
-  id: string
-  description?: string
-}
-
-export type Category = {
-  id: string
-  category: string
-  order: number
-}
+import { Category, Menu } from '../../shared/models'
 
 @Component({
   selector: 'app-categories',
@@ -43,6 +28,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
 
   private menuRef: AngularFirestoreCollection
   private categoriesRef: AngularFirestoreCollection
+
   private menuSub: Subscription
   private categorySub: Subscription
   private categoryChangeSub: Subscription
@@ -102,7 +88,8 @@ export class CategoriesComponent implements OnInit, OnDestroy {
             createdDate,
             uid,
             description,
-            author
+            author,
+            isNew
           } = doc.payload.doc.data() as Menu
           return {
             id: doc.payload.doc.id,
@@ -111,10 +98,16 @@ export class CategoriesComponent implements OnInit, OnDestroy {
             createdDate,
             uid,
             description,
-            author
+            author,
+            isNew
           }
         })
-        return mappedMenus.sort((a, b) => (a.name > b.name ? 1 : -1))
+
+        if (!authData.isAdmin) {
+          mappedMenus.sort((a, b) => (a.name > b.name ? 1 : -1))
+          return mappedMenus.filter(menu => !menu.isNew)
+        }
+        return mappedMenus.sort((a, b) => (a.author > b.author ? 1 : -1))
       })
     )
   }

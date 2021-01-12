@@ -7,35 +7,30 @@ import 'firebase/auth'
 import { CookieService } from 'ngx-cookie-service'
 import { UIService } from './ui.service'
 import { environment } from '../../../environments/environment'
-
-export type User = {
-  uid: string
-  displayName: string
-  email: string
-  photoURL: string
-  isAdmin: boolean
-}
-
-export interface AuthData {
-  email: string
-  password: string
-}
+import { AngularFirestore } from '@angular/fire/firestore'
+import { AngularFirestoreCollection } from '@angular/fire/firestore'
+import { User, AuthData } from '../models'
+import { APP_PATH } from '../const'
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   showNavSubject = new Subject<boolean>()
-  private user: User
+
+  private menuRef: AngularFirestoreCollection
 
   constructor(
     private router: Router,
     private afauth: AngularFireAuth,
     private uiService: UIService,
-    private cookiesService: CookieService
-  ) {}
+    private cookiesService: CookieService,
+    private db: AngularFirestore
+  ) {
+    this.menuRef = this.db.collection('menus')
+  }
 
-  initAuthListener(): void {
+  initAuthListener(cb: (result: boolean) => void): void {
     this.uiService.loadingStateChanged.next(true)
     this.afauth.authState.subscribe(user => {
       this.uiService.loadingStateChanged.next(false)
@@ -44,15 +39,25 @@ export class AuthService {
         const isAdmin = uid === environment.theEdior.uid
         const localUser: User = { uid, email, displayName, photoURL, isAdmin }
 
-        this.cookiesService.set('authData', JSON.stringify(localUser), 1, '/')
+        this.cookiesService.set(
+          'authData',
+          JSON.stringify(localUser),
+          1,
+          APP_PATH
+        )
         this.showNavSubject.next(true)
         if (this.router.url === '/login') {
           this.router.navigate(['/categories'])
         }
+        cb(true)
       } else {
-        this.cookiesService.delete('authData', '/')
+        const cookies = ['authData', 'selectedMenu', 'initialLoad', 'menus']
+        for (const cookie of cookies) {
+          this.cookiesService.delete(cookie, APP_PATH)
+        }
         this.showNavSubject.next(false)
         this.router.navigate(['/login'])
+        cb(false)
       }
     })
   }
@@ -62,8 +67,16 @@ export class AuthService {
     const { email, password } = authData
     this.afauth
       .createUserWithEmailAndPassword(email, password)
-      .then(() => {
-        this.uiService.loadingStateChanged.next(false)
+      .then(({ user }) => {
+        this.menuRef
+          .add({
+            author: user.email,
+            uid: user.uid,
+            isNew: true
+          })
+          .then(() => {
+            this.uiService.loadingStateChanged.next(false)
+          })
       })
       .catch(err => {
         this.uiService.loadingStateChanged.next(false)

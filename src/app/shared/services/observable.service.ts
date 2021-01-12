@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { Subject } from 'rxjs'
-import { Category } from '../../components/categories/categories.component'
+import { Category } from '../models'
 
 @Injectable({
   providedIn: 'root'

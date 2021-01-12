@@ -3,7 +3,7 @@ import { Subject, Subscription } from 'rxjs'
 import { ObservableService } from './shared/services/observable.service'
 import { AuthService } from './shared/services/auth.service'
 import { UIService } from './shared/services/ui.service'
-import { Menu } from './components/categories/categories.component'
+import { Menu } from './shared/models'
 
 @Component({
   selector: 'app-root',
@@ -14,6 +14,7 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'restaurant-menu'
   subject = new Subject<'add'>()
   isAuth: boolean
+  isAdmin: boolean
   menu: Menu
 
   private navSub: Subscription
@@ -32,7 +33,11 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.auth.initAuthListener()
+    this.auth.initAuthListener((res: boolean) => {
+      if (res) {
+        this.isAdmin = this.auth.getUser().isAdmin
+      }
+    })
     this.isAuth = this.auth.isAuth()
     this.categorySub = this.uiService.categoryListChanged.subscribe(
       (menu: Menu) => {
@@ -48,7 +53,8 @@ export class AppComponent implements OnInit, OnDestroy {
             categoryIds: [],
             id: null,
             createdDate: null,
-            author: ''
+            author: '',
+            isNew: false
           }
         }
       }
