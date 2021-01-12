@@ -9,7 +9,7 @@ export const environment = {
     appId: '1:48210655319:web:495ee395605d14bbca0b12',
     measurementId: 'G-ZF5BTWJQMR'
   },
-  theEdior: {
+  theEditor: {
     uid: '9JbqcN8543ffCbmgj5xBmus2Njg1'
   }
 }

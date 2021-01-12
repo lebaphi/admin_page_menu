@@ -36,7 +36,7 @@ export class AuthService {
       this.uiService.loadingStateChanged.next(false)
       if (user) {
         const { uid, email, displayName, photoURL } = user
-        const isAdmin = uid === environment.theEdior.uid
+        const isAdmin = uid === environment.theEditor.uid
         const localUser: User = { uid, email, displayName, photoURL, isAdmin }
 
         this.cookiesService.set(
