@@ -31,7 +31,7 @@
       [disabled]="f.invalid"
       [mat-dialog-close]="f.value"
     >
-      Add
+      {{ data.name ? 'Update' : 'Add' }}
     </button>
   </div>
 </form>
