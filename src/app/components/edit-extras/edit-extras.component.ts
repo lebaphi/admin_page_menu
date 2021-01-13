@@ -1,13 +1,13 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core'
 import { MatTableDataSource } from '@angular/material/table'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Params } from '@angular/router'
 import {
   AngularFirestoreCollection,
   AngularFirestore
 } from '@angular/fire/firestore'
 import { map } from 'rxjs/operators'
 import { MatDialog } from '@angular/material/dialog'
-import { Subscription } from 'rxjs'
+import { Subscription, Observable } from 'rxjs'
 
 import { UIService } from '../../shared/services/ui.service'
 import { ConfirmDialogComponent } from '../../shared/modals/confirm-modal/confirm.modal'
@@ -29,6 +29,7 @@ export class EditExtrasComponent implements OnInit, OnDestroy {
   categoryId: string
   itemId: string
   optionId: string
+  option: Observable<Params>
 
   constructor(
     private db: AngularFirestore,
@@ -40,6 +41,7 @@ export class EditExtrasComponent implements OnInit, OnDestroy {
     this.categoryId = id
     this.itemId = itemId
     this.optionId = optionId
+    this.option = this.activatedRoute.queryParams
     this.ref = this.db.collection('extras', ref =>
       ref.where('optionId', '==', this.optionId)
     )

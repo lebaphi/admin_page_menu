@@ -1,6 +1,6 @@
 <div class="table-category" fxLayout="column">
   <div class="table-category-editor">
-    <div class="category-name">Category Name</div>
+    <div class="category-name">{{ (headerName | async).category }}</div>
   </div>
   <div>
     <app-table-view

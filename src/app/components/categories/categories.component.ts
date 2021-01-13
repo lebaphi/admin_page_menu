@@ -134,7 +134,9 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   }
 
   navigateTo(element: Category): void {
-    this.router.navigate([`/categories/${element.id}/items`])
+    this.router.navigate([`/categories/${element.id}/items`], {
+      queryParams: { category: element.category }
+    })
   }
 
   addNewItem(item: Category): void {

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
-import { ActivatedRoute, Router } from '@angular/router'
+import { ActivatedRoute, Router, Params } from '@angular/router'
 import {
   AngularFirestore,
   AngularFirestoreCollection
@@ -7,7 +7,7 @@ import {
 import { map } from 'rxjs/operators'
 import { MatTableDataSource } from '@angular/material/table'
 import { MatDialog } from '@angular/material/dialog'
-import { Subscription } from 'rxjs'
+import { Subscription, Observable } from 'rxjs'
 
 import { UIService } from '../../shared/services/ui.service'
 import { ConfirmDialogComponent } from '../../shared/modals/confirm-modal/confirm.modal'
@@ -24,6 +24,8 @@ export class CategoryItemsComponent implements OnInit, OnDestroy {
   categoryId: string
   dataSource = new MatTableDataSource<CategoryItem>()
   ref: AngularFirestoreCollection
+  headerName: Observable<Params>
+
   private categoryItemSub: Subscription
 
   constructor(
@@ -34,6 +36,7 @@ export class CategoryItemsComponent implements OnInit, OnDestroy {
     private dialog: MatDialog
   ) {
     this.categoryId = this.activatedRoute.snapshot.params.id
+    this.headerName = this.activatedRoute.queryParams
     this.ref = this.db.collection('categoryItems', ref =>
       ref.where('categoryId', '==', this.categoryId)
     )
@@ -81,9 +84,10 @@ export class CategoryItemsComponent implements OnInit, OnDestroy {
   }
 
   navigateTo(element: CategoryItem): void {
-    this.router.navigate([
-      `/categories/${this.categoryId}/items/${element.id}/options`
-    ])
+    this.router.navigate(
+      [`/categories/${this.categoryId}/items/${element.id}/options`],
+      { queryParams: { categoryItem: element.item } }
+    )
   }
 
   addNewItem(categoryItem: CategoryItem): void {
